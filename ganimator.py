@@ -1,3 +1,7 @@
+import sys
+# Allow import from git submodules
+sys.path.append("./submodules/stylegan2/")
+
 from moviepy.editor import *
 import scipy
 import dnnlib
