@@ -1,0 +1,3 @@
+[submodule "submodules/stylegan2"]
+	path = submodules/stylegan2
+	url = https://github.com/vsemecky/stylegan2.git
