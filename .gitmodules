@@ -1,3 +1,6 @@
 [submodule "submodules/stylegan2"]
 	path = submodules/stylegan2
 	url = https://github.com/vsemecky/stylegan2.git
+[submodule "submodules/u2net"]
+	path = submodules/u2net
+	url = https://github.com/vsemecky/U-2-Net.git
