@@ -1,7 +1,7 @@
 import sys
 # Allow import from git submodules
 sys.path.append("./submodules/stylegan2/")
-sys.path.append("./submodules/u2net")
+sys.path.append("./submodules/u2net/")
 
 from moviepy.editor import *
 import scipy
@@ -42,7 +42,7 @@ def load_network(pkl):
 def get_filename(prefix="video", time=None, psi=None, seed=None, timestamp=True):
     file_name = ""
     if timestamp:
-        file_name += datetime.now().strftime("%Y-%m-%d %H:%M")
+        file_name += datetime.now().strftime("%Y-%m-%d %H:%M - ")
     if prefix:
         file_name += prefix
     if seed:
