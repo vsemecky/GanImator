@@ -40,11 +40,9 @@ def load_network(pkl):
 # Generates unified filename based on parameters
 #
 def get_filename(prefix="video", time=None, psi=None, seed=None, timestamp=True):
-    file_name = ""
+    file_name = prefix
     if timestamp:
-        file_name += datetime.now().strftime("%Y-%m-%d %H:%M - ")
-    if prefix:
-        file_name += prefix
+        file_name += datetime.now().strftime(" - %Y-%m-%d %H:%M")
     if seed:
         file_name += " - seed={}".format(seed)
     if time:
