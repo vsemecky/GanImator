@@ -276,3 +276,32 @@ def seed_comparison_clip(
             )
 
     return clips_array(grid)
+
+
+#
+# Generates pkl comparison VideoClip
+#
+def pkl_comparison_clip(
+            grid,  # Array of pkl paths
+            psi=0.5,  # Truncation psi
+            mp4_fps=30,
+            time=60,  # Duration in seconds
+            smoothing_sec=1.0,
+            randomize_noise=False,
+            seed=420
+        ):
+
+    # Overwrite pkl paths with MoviePy clips
+    for row in range(len(grid)):
+        for col in range(len(grid[row])):
+            grid[row][col] = latent_walk_clip(
+                pkl=grid[row][col],
+                mp4_fps=mp4_fps,
+                psi=psi,
+                time=time,
+                smoothing_sec=smoothing_sec,
+                randomize_noise=randomize_noise,
+                seed=seed
+            )
+
+    return clips_array(grid)
