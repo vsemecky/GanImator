@@ -5,7 +5,6 @@ from flask_ngrok import run_with_ngrok
 from ganimator import *
 import project
 
-from vojtovo import *
 
 try:
     import google.colab  # Check Colab

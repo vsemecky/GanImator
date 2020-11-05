@@ -1,6 +1,5 @@
 import glob
 from pprint import pprint
-from vojtovo import *
 from ganimator import *
 
 
