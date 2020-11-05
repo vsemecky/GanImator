@@ -16,7 +16,12 @@ if len(sys.argv) < 2:
     exit("Missing project dir.\n\nUsage:\n\tpython web.py \"/path/to/my project\"")
 
 project = project.Project(sys.argv[1])  # The first command line argument
-app = flask.Flask(__name__, static_url_path='', static_folder=project.data_dir)
+app = flask.Flask(
+    __name__,
+    static_url_path='',
+    static_folder=project.data_dir,
+    template_folder='flask/templates'
+)
 
 
 # Homepage
