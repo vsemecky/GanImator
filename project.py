@@ -43,3 +43,7 @@ class Project:
     def add_image(self, seed):
         image_pil = generate_image(pkl=self.pkl, seed=int(seed))
         image_pil.save("%s/%s.jpg" % (self.data_dir, seed))
+        # Reload seeds
+        self.image_seeds = self.get_image_seeds()
+        self.style_seeds = self.get_style_seeds()
+
