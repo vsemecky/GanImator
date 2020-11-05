@@ -1,9 +1,10 @@
-import sys
+from random import random
 import flask
 from flask import abort, redirect, url_for
 from flask_ngrok import run_with_ngrok
 from ganimator import *
 import project
+import random
 
 
 try:
@@ -59,8 +60,13 @@ def sysinfo():
 
 
 @app.route("/api/add-image")
+@app.route("/api/add-image/")
 @app.route("/api/add-image/<seed>")
-def add_image(seed=420):
+def add_image(seed=None):
+    seed = seed or random.randrange(1, 9999)
+
+    # if not seed:
+    #     seed = random.randrange(1, 9999)  # Random seed
     project.add_image(seed)
     return redirect(url_for('images'))
 
