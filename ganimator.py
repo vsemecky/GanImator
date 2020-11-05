@@ -306,9 +306,7 @@ def pkl_comparison_clip(
 
     return clips_array(grid)
 
-#
-#
-#
+
 def style_mixing_example(network_pkl, row_seeds, col_seeds, truncation_psi, col_styles=[0,1,2,3,4,5,6], minibatch_size=4):
 
     print('Loading networks from "%s"...' % network_pkl)
@@ -357,3 +355,25 @@ def style_mixing_example(network_pkl, row_seeds, col_seeds, truncation_psi, col_
                 key = (row_seed, row_seed)
             canvas.paste(PIL.Image.fromarray(image_dict[key], 'RGB'), (W * col_idx, H * row_idx))
     return canvas
+
+
+def generate_image(pkl, seed=42, psi=0.5):
+    """ Returns PIL.Image """
+    print('Loading networks from "%s"...' % pkl)
+    # @todo Use loading function
+    _G, _D, Gs = pretrained_networks.load_networks(pkl)
+    noise_vars = [var for name, var in Gs.components.synthesis.vars.items() if name.startswith('noise')]
+
+    Gs_kwargs = dnnlib.EasyDict()
+    Gs_kwargs.output_transform = dict(func=tflib.convert_images_to_uint8, nchw_to_nhwc=True)
+    Gs_kwargs.randomize_noise = False
+    if psi:
+        Gs_kwargs.truncation_psi = psi
+
+    print('Generating image for seed %d...' % seed)
+    rnd = np.random.RandomState(seed)
+    z = rnd.randn(1, *Gs.input_shape[1:])  # [minibatch, component]
+    tflib.set_vars({var: rnd.randn(*var.shape.as_list()) for var in noise_vars})  # [height, width]
+    images = Gs.run(z, None, **Gs_kwargs)  # [minibatch, height, width, channel]
+    image_pil = PIL.Image.fromarray(images[0], 'RGB')
+    return image_pil
