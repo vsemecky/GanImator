@@ -1,0 +1,12 @@
+{% extends "@layout.html" %}
+{% block content %}
+
+<h1 align="center">{{ title }}</h1>
+
+<section>
+    {% for dataset in datasets %}
+    <a href="/dataset/{{ dataset }}" type="button" class="btn btn-outline-success">{{ dataset }}</a>
+    {% endfor %}
+</section>
+
+{% endblock content %}

@@ -1,0 +1,12 @@
+{% extends "@layout.html" %}
+{% block content %}
+
+<h1>System info</h1>
+
+<ul>
+{% for key, value in sysinfo.items() %}
+    <li>{{ key }}: {{ value }}</li>
+{% endfor %}
+</ul>
+
+{% endblock content %}
