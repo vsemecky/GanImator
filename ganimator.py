@@ -357,7 +357,7 @@ def style_mixing_example(network_pkl, row_seeds, col_seeds, truncation_psi, col_
     return canvas
 
 
-def generate_image(pkl, seed=42, psi=0.5):
+def generate_image(pkl: str, seed: int = 42, psi: float = 0.5):
     """ Returns PIL.Image """
     print('Loading networks from "%s"...' % pkl)
     # @todo Use loading function

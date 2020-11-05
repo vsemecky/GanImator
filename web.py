@@ -58,8 +58,9 @@ def sysinfo():
     return flask.render_template('sysinfo.html', sysinfo=sysinfo_data)
 
 
+@app.route("/api/add-image")
 @app.route("/api/add-image/<seed>")
-def add_image(seed):
+def add_image(seed=420):
     project.add_image(seed)
     return redirect(url_for('images'))
 

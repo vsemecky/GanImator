@@ -41,5 +41,5 @@ class Project:
         return seeds
 
     def add_image(self, seed):
-        image_pil = generate_image(pkl=self.pkl, seed=seed)
+        image_pil = generate_image(pkl=self.pkl, seed=int(seed))
         image_pil.save("%s/%s.jpg" % (self.data_dir, seed))
