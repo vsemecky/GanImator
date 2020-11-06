@@ -21,7 +21,7 @@ if len(sys.argv) < 2:
     exit("Missing project dir.\n\nUsage:\n\tpython web.py \"/path/to/my project\"")
 
 """ Que of jobs should be done by worker """
-worker_que = [654, 879, 654, 654, 654, 6521, 654, 654]
+worker_que = []  # array of {'action': string, 'seed': int}
 
 project = project.Project(sys.argv[1])  # The first command line argument
 app = flask.Flask(
@@ -71,7 +71,7 @@ def sysinfo():
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
     seed = seed or random.randrange(1, 9999)
-    worker_que.append(seed)
+    worker_que.append({'action': 'add_style', 'seed': seed})
     return redirect(url_for('images'))
 
 
@@ -80,7 +80,7 @@ def add_image(seed=None):
 @app.route("/api/add-style/<seed>")
 def add_style(seed=None):
     seed = seed or random.randrange(1, 9999)
-    worker_que.append(seed)
+    worker_que.append({'action': 'add_style', 'seed': seed})
     return redirect(url_for('styles'))
 
 
@@ -92,20 +92,25 @@ def remove_image(seed):
 
 @app.route("/api/remove-style/<seed>")
 def remove_style(seed):
-    project.remove_image(seed)
+    project.remove_style(seed)
     return redirect(url_for('styles'))
 
 
 def background_worker():
     """ Background worker running in thread """
     def log(message: str): print(colored("Worker:", "green"), colored(message, "yellow"))
-
     log("start")
     while True:
         try:
-            seed = worker_que.pop(0)
-            log("seed = %d" % seed)
-            project.add_image(seed)
+            task = worker_que.pop(0)
+            # log("task=%s seed = %d" % (task['action'], task['seed'])
+            log(task)
+            if task['action'] == 'add_image':
+                project.add_image(task['seed'])
+            elif task['action'] == 'add_style':
+                project.add_style(task['seed'])
+            else:
+                log("Uknown task")
         except Exception as e:
             log("Que is empty")
             time.sleep(2)
