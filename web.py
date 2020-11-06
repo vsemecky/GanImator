@@ -1,7 +1,11 @@
+import threading
+import time
 from random import random
 import flask
 from flask import abort, redirect, url_for
 from flask_ngrok import run_with_ngrok
+from termcolor import colored
+
 from ganimator import *
 import project
 import random
@@ -15,6 +19,9 @@ except:
 
 if len(sys.argv) < 2:
     exit("Missing project dir.\n\nUsage:\n\tpython web.py \"/path/to/my project\"")
+
+""" Que of jobs should be done by worker """
+worker_que = [654, 879, 654, 654, 654, 6521, 654, 654]
 
 project = project.Project(sys.argv[1])  # The first command line argument
 app = flask.Flask(
@@ -67,15 +74,29 @@ def add_image(seed=None):
 
     # if not seed:
     #     seed = random.randrange(1, 9999)  # Random seed
-    project.add_image(seed)
+    # project.add_image(seed)
+    worker_que.append(seed)
     return redirect(url_for('images'))
 
 
-if __name__ == "__main__":
-    if IN_COLAB:
-        print("Colab: YES")
-        run_with_ngrok(app)  # In Google Colab run with Ngrok
-    else:
-        print("Colab: No")
+def background_worker():
+    """ Background worker running in thread """
+    title = colored("Thread", "yellow")
+    print(title, "start")
+    while 1:
+        try:
+            seed = worker_que.pop(0)
+            print(title, "seed =", seed)
+            time.sleep(0.1)
+        except:
+            print(title, "Que is empty")
+            time.sleep(1)
 
-    app.run()
+
+if __name__ == "__main__":
+    print("Colab:", IN_COLAB)
+    if IN_COLAB:
+        run_with_ngrok(app)  # In Google Colab run with Ngrok
+
+    threading.Thread(target=background_worker).start()  # Start background worker
+    app.run()  # Start app
