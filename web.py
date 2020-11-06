@@ -41,13 +41,13 @@ def main():
 # Referenční obrázky
 @app.route("/images")
 def images():
-    return flask.render_template('seeds.html', type="images", seeds=project.image_seeds, title="Images")
+    return flask.render_template('images.html', seeds=project.image_seeds, title="Images")
 
 
 # Stylovací obrázky
 @app.route("/styles")
 def styles():
-    return flask.render_template('seeds.html', type="styles", seeds=project.style_seeds, title="Styles")
+    return flask.render_template('styles.html', seeds=project.style_seeds, title="Styles")
 
 
 # System info
