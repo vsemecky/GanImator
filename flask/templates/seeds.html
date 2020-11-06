@@ -9,12 +9,12 @@
         <img class="card-img-top" src="/{{ type }}/{{ seed }}.jpg" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">Seed #{{ seed }}</h5>
-            <a href="/api/remove/{{ type }}/{{ seed }}" class="btn btn-warning">Remove</a>
+            <a href="/api/remove-{{ type }}/{{ seed }}" class="btn btn-warning">Remove</a>
         </div>
     </div>
     {% endfor %}
 </div>
 
-<a href="/api/add-image/{{ seed }}" class="btn btn-info">Add</a>
+<a href="/api/add-{{ type }}/{{ seed }}" class="btn btn-info">Add</a>
 
 {% endblock content %}

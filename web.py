@@ -1,4 +1,4 @@
-import threading
+from threading import Thread
 import time
 from random import random
 import flask
@@ -71,26 +71,44 @@ def sysinfo():
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
     seed = seed or random.randrange(1, 9999)
-
-    # if not seed:
-    #     seed = random.randrange(1, 9999)  # Random seed
-    # project.add_image(seed)
     worker_que.append(seed)
     return redirect(url_for('images'))
 
 
+@app.route("/api/add-style")
+@app.route("/api/add-style/")
+@app.route("/api/add-style/<seed>")
+def add_style(seed=None):
+    seed = seed or random.randrange(1, 9999)
+    worker_que.append(seed)
+    return redirect(url_for('styles'))
+
+
+@app.route("/api/remove-image/<seed>")
+def remove_image(seed):
+    project.remove_image(seed)
+    return redirect(url_for('images'))
+
+
+@app.route("/api/remove-style/<seed>")
+def remove_style(seed):
+    project.remove_image(seed)
+    return redirect(url_for('styles'))
+
+
 def background_worker():
     """ Background worker running in thread """
-    title = colored("Thread", "yellow")
-    print(title, "start")
-    while 1:
+    def log(message: str): print(colored("Worker:", "green"), colored(message, "yellow"))
+
+    log("start")
+    while True:
         try:
             seed = worker_que.pop(0)
-            print(title, "seed =", seed)
-            time.sleep(0.1)
-        except:
-            print(title, "Que is empty")
-            time.sleep(1)
+            log("seed = %d" % seed)
+            project.add_image(seed)
+        except Exception as e:
+            log("Que is empty")
+            time.sleep(2)
 
 
 if __name__ == "__main__":
@@ -98,5 +116,5 @@ if __name__ == "__main__":
     if IN_COLAB:
         run_with_ngrok(app)  # In Google Colab run with Ngrok
 
-    threading.Thread(target=background_worker).start()  # Start background worker
+    Thread(target=background_worker).start()  # Start background worker
     app.run()  # Start app
