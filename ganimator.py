@@ -359,9 +359,7 @@ def generate_image(pkl: str, seed: int = 42, psi: float = 0.5):
     tflib.init_tf()  # Init TensorFlow (prozatim, nez rochodime default session)
 
     """ Returns PIL.Image """
-    print('Loading networks from "%s"...' % pkl)
-    # @todo Use loading function
-    _G, _D, Gs = pretrained_networks.load_networks(pkl)
+    _G, _D, Gs = load_network(pkl)  # Loading neurals
     noise_vars = [var for name, var in Gs.components.synthesis.vars.items() if name.startswith('noise')]
 
     Gs_kwargs = dnnlib.EasyDict()
