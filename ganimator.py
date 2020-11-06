@@ -54,9 +54,6 @@ def get_filename(prefix="video", time=None, psi=None, seed=None, timestamp=True)
     return file_name
 
 
-tflib.init_tf()
-
-
 # from https://colab.research.google.com/drive/1ShgW6wohEFQtqs_znMna3dzrcVoABKIH
 def generate_zs_from_seeds(seeds, Gs):
     zs = []
@@ -308,6 +305,7 @@ def pkl_comparison_clip(
 
 
 def style_mixing_example(network_pkl, row_seeds, col_seeds, truncation_psi, col_styles=[0,1,2,3,4,5,6], minibatch_size=4):
+    tflib.init_tf()  # Init TensorFlow (prozatim, nez rochodime default session)
 
     print('Loading networks from "%s"...' % network_pkl)
     _G, _D, Gs = pretrained_networks.load_networks(network_pkl)
@@ -358,6 +356,8 @@ def style_mixing_example(network_pkl, row_seeds, col_seeds, truncation_psi, col_
 
 
 def generate_image(pkl: str, seed: int = 42, psi: float = 0.5):
+    tflib.init_tf()  # Init TensorFlow (prozatim, nez rochodime default session)
+
     """ Returns PIL.Image """
     print('Loading networks from "%s"...' % pkl)
     # @todo Use loading function
