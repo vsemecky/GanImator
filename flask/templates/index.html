@@ -1,12 +1,30 @@
 {% extends "@layout.html" %}
 {% block content %}
 
-<h1 align="center">{{ title }}</h1>
+<section id="animator" class="row">
 
-<section>
-    {% for dataset in datasets %}
-    <a href="/dataset/{{ dataset }}" type="button" class="btn btn-outline-success">{{ dataset }}</a>
-    {% endfor %}
+    <div id="screen" class="col" style="text-align: center; margin-top: 1em;">
+        <img id="player" class="img-fluid" src="/project/images/{{ seeds[0] }}.jpg" alt="{{ seed }}">
+    </div>
+
+    <aside class="col-3">
+        <div id="images" class="row">
+            {% for seed in seeds %}
+            <div class="col" style="padding: 1em;">
+                <img class="img-fluid" src="/project/images/{{ seed }}.jpg" alt="{{ seed }}" data-seed="{{ seed }}">
+            </div>
+            {% endfor %}
+        </div>
+
+    </aside>
+
 </section>
+
+<script>
+$("#images img").click(function() {
+    src = $(this).attr("src");
+    $("#player").attr("src", src);
+});
+</script>
 
 {% endblock content %}

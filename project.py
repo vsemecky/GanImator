@@ -1,6 +1,13 @@
 import glob
+import os
 from pprint import pprint
-from ganimator import *
+
+try:
+    import google.colab  # Check Colab
+    from ganimator import *  # Load ganimator lib only in Colab
+except Exception:
+    pass
+
 
 class Project:
     """ Web app model for Project"""

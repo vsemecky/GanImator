@@ -1,12 +1,11 @@
+import sys
 from threading import Thread
 import time
 from random import random
-import flask
-from flask import abort, redirect, url_for
+from flask import Blueprint, Flask, render_template, redirect, url_for, abort
 from flask_ngrok import run_with_ngrok
 from termcolor import colored
 
-from ganimator import *
 import project
 import random
 
@@ -19,35 +18,45 @@ except:
 
 if len(sys.argv) < 2:
     exit("Missing project dir.\n\nUsage:\n\tpython web.py \"/path/to/my project\"")
+project = project.Project(sys.argv[1])  # The first command line argument
 
 """ Que of jobs should be done by worker """
 worker_que = []  # array of {'action': string, 'seed': int}
 
-project = project.Project(sys.argv[1])  # The first command line argument
-app = flask.Flask(
+
+""" Blueprint for serving Project static files """
+project_blueprint = Blueprint(
+    'project_blueprint',
     __name__,
-    static_url_path='',
+    static_url_path='/project',
     static_folder=project.data_dir,
-    template_folder='flask/templates'
 )
+
+app = Flask(
+    __name__,
+    static_url_path='/static',
+    static_folder="flask/static",
+    template_folder="flask/templates"
+)
+app.register_blueprint(project_blueprint)
 
 
 # Homepage
 @app.route("/")
 def main():
-    return flask.render_template('index.html', title="Homepage")
+    return render_template('index.html', seeds=project.image_seeds, title="Homepage")
 
 
 # Referenční obrázky
 @app.route("/images")
 def images():
-    return flask.render_template('images.html', seeds=project.image_seeds, title="Images")
+    return render_template('images.html', seeds=project.image_seeds, title="Images")
 
 
 # Stylovací obrázky
 @app.route("/styles")
 def styles():
-    return flask.render_template('styles.html', seeds=project.style_seeds, title="Styles")
+    return render_template('styles.html', seeds=project.style_seeds, title="Styles")
 
 
 # System info
@@ -63,7 +72,7 @@ def sysinfo():
         'hdd_space_free': "30",
         'Running in Colab': IN_COLAB,
     }
-    return flask.render_template('sysinfo.html', sysinfo=sysinfo_data)
+    return render_template('sysinfo.html', sysinfo=sysinfo_data)
 
 
 @app.route("/api/add-image")
@@ -117,9 +126,14 @@ def background_worker():
 
 
 if __name__ == "__main__":
+    # Start background worker
+    Thread(target=background_worker).start()
+
     print("Colab:", IN_COLAB)
     if IN_COLAB:
         run_with_ngrok(app)  # In Google Colab run with Ngrok
+        app.run()  # Start app
+    else:
+        app.run(debug=True)  # Start app
 
-    Thread(target=background_worker).start()  # Start background worker
-    app.run()  # Start app
+
