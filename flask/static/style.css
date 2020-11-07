@@ -1,0 +1,13 @@
+#animator aside img {
+    cursor: pointer;
+}
+
+
+aside {
+    background: gray;
+    apadding: 1em;
+}
+
+h1 {
+    align: center;
+}

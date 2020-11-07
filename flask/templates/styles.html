@@ -3,16 +3,19 @@
 
 <h1>{{ title }}</h1>
 
-<div class="card-group">
+<div class="row">
     {% for seed in seeds %}
-    <div class="card">
-        <img class="card-img-top" src="/styles/{{ seed }}.jpg" alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title">Seed #{{ seed }}</h5>
-            <a href="/api/remove-style/{{ seed }}" class="btn btn-warning">Remove</a>
+    <div class="col-sm d-flex">
+        <div class="card card-body flex-fill">
+            <img class="card-img-top" src="/styles/{{ seed }}.jpg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Seed #{{ seed }}</h5>
+                <a href="/api/remove-style/{{ seed }}" class="btn btn-warning">Remove</a>
+            </div>
         </div>
     </div>
     {% endfor %}
+
 </div>
 
 <a href="/api/add-style/{{ seed }}" class="btn btn-info">Add</a>
