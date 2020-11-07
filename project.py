@@ -51,11 +51,11 @@ class Project:
 
     def add_style(self, seed):
         image_pil = generate_image(pkl=self.pkl, seed=int(seed))
-        image_pil.save("%s/style/%s.jpg" % (self.data_dir, seed))
+        image_pil.save("%s/styles/%s.jpg" % (self.data_dir, seed))
         self._reload_seeds()
 
     def remove_style(self, seed):
-        os.remove("%s/style/%s.jpg" % (self.data_dir, seed))
+        os.remove("%s/styles/%s.jpg" % (self.data_dir, seed))
         self._reload_seeds()
 
     def _reload_seeds(self):
