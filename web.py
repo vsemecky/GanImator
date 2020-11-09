@@ -75,22 +75,16 @@ def sysinfo():
     return render_template('sysinfo.html', sysinfo=sysinfo_data)
 
 
-@app.route("/api/add-image")
-@app.route("/api/add-image/")
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
-    seed = seed or random.randrange(1, 9999)
     worker_que.append({'action': 'add_style', 'seed': seed})
-    return redirect(url_for('images'))
+    return {'seed': seed}
 
 
-@app.route("/api/add-style")
-@app.route("/api/add-style/")
 @app.route("/api/add-style/<seed>")
-def add_style(seed=None):
-    seed = seed or random.randrange(1, 9999)
+def add_style(seed):
     worker_que.append({'action': 'add_style', 'seed': seed})
-    return redirect(url_for('styles'))
+    return {'seed': seed}
 
 
 @app.route("/api/remove-image/<seed>")
@@ -135,5 +129,3 @@ if __name__ == "__main__":
         app.run()  # Start app
     else:
         app.run(debug=True)  # Start app
-
-
