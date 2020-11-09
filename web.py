@@ -87,7 +87,7 @@ def get_project():
 
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
-    worker_que.append({'action': 'add_style', 'seed': seed})
+    worker_que.append({'action': 'add_image', 'seed': seed})
     return {'seed': seed}
 
 
@@ -125,7 +125,7 @@ def background_worker():
             else:
                 log("Uknown task")
         except Exception as e:
-            log("Que is empty")
+            # log("Que is empty")
             time.sleep(2)
 
 
