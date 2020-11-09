@@ -1,37 +1,51 @@
 const e = React.createElement;
 
-const images = [420, 123];
-
-// noinspection JSXNamespaceValidation
 class Animator extends React.Component {
-
-    // currentSeed = images[0];
 
     constructor(props) {
         super(props);
-        this.state = { currentSeed: 123 };
-        // this.currentSeed = images[1];
+        this.state = {
+            images: [],
+            styles: [],
+            current_image: 0,
+        };
         this.render();
     }
 
+    componentDidMount() {
+    fetch("/api/project")
+        .then(res => res.json())
+        .then(
+            (result) => {
+                console.log("RESULT", result);
+                this.setState(result);
+                console.log("STATE", this.state);
+            },
+            (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                });
+            }
+        )
+    }
+
+
     seedOnClick(seed) {
         console.log("seedOnClick", seed);
-        this.setState({ currentSeed: seed});
-        this.state.currentSeed = seed;
+        this.setState({ current_image: seed});
     }
 
     render() {
-        console.log(images);
         return (
             <div className="row">
                 <article id="screen" className="col">
                     <b>Player</b>
-                    <img id="player" className="img-fluid" src={"/project/images/" + this.state.currentSeed + ".jpg"} title={this.state.currentSeed} />
+                    <img id="player" className="img-fluid" src={"/project/images/" + this.state.current_image + ".jpg"} title={this.state.current_image} />
                 </article>
                 <aside className="col-3">
-                    {images.map(seed => {
+                    {this.state.images.map(seed => {
                         return <img key={seed} className="img-fluid" src={"/project/images/" + seed + ".jpg"} title={seed} onClick={() => this.seedOnClick(seed)} />;
-                        // return <img key={seed} className="img-fluid" src={"/project/images/" + seed + ".jpg"} title={seed} onClick={() => this.seedOnClick(seed)} />;
                     })}
                 </aside>
             </div>);

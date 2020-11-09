@@ -75,6 +75,16 @@ def sysinfo():
     return render_template('sysinfo.html', sysinfo=sysinfo_data)
 
 
+@app.route("/api/project")
+def get_project():
+    return {
+        'data_dir': project.data_dir,
+        'images': project.image_seeds,
+        'styles': project.style_seeds,
+        'current_image': project.image_seeds[0],
+    }
+
+
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
     worker_que.append({'action': 'add_style', 'seed': seed})
