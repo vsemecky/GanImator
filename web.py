@@ -88,7 +88,7 @@ def get_project():
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
     worker_que.append({'action': 'add_image', 'seed': seed})
-    return {'seed': seed}
+    return get_project()
 
 
 @app.route("/api/add-style/<seed>")
