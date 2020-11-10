@@ -17,11 +17,12 @@ class Animator extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
-                console.log("RESULT", result);
+                console.log("componentDidMount() RESULT", result);
                 this.setState(result);
-                console.log("STATE", this.state);
+                console.log("componentDidMount() STATE", this.state);
             },
             (error) => {
+                console.log("componentDidMount() ERROR", error);
                 this.setState({
                     isLoaded: true,
                     error
@@ -35,23 +36,26 @@ class Animator extends React.Component {
         this.setState({ current_image: seed});
     }
 
-    addImage() {
-        var seed = Math.floor(Math.random() * 1000) + 1;  // Random number 1-1000
+    addImageClick() {
+        console.log("Add image");
+        let seed = Math.floor(Math.random() * 1000) + 1;  // Random number 1-1000
         fetch("/api/add-image/" + seed)
-        .then(res => res.json())
-        .then(
-            (result) => {
-                console.log("RESULT", result);
-                this.setState(result);
-                console.log("STATE", this.state);
-            },
-            (error) => {
-                this.setState({
-                    isLoaded: true,
-                    error
-                });
-            }
-        )
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log("addImage() RESULT", result);
+                    this.setState({
+                        isLoaded: true,
+                    });
+                    console.log("addImage() STATE", this.state);
+                },
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
     }
 
     render() {
@@ -64,7 +68,7 @@ class Animator extends React.Component {
                     {this.state.images.map(seed => {
                         return <img key={seed} className="img-fluid" src={"/project/images/" + seed + ".jpg"} title={seed} onClick={() => this.seedOnClick(seed)} />;
                     })}
-                    <button type="button" className="btn btn-success" onClick={this.addImage}>Add</button>
+                    <button type="button" className="btn btn-success" onClick={() => this.addImageClick()}>Add</button>
                 </aside>
             </div>);
     }
