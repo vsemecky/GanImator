@@ -12,8 +12,9 @@ import random
 
 try:
     import google.colab  # Check Colab
+    from ganimator import *  # Load ganimator lib only in Colab
     IN_COLAB = True
-except:
+except Exception:
     IN_COLAB = False
 
 if len(sys.argv) < 2:
@@ -44,22 +45,22 @@ app.register_blueprint(project_blueprint)
 # Homepage
 @app.route("/")
 def main():
-    return render_template('index.html', seeds=project.image_seeds, title="Homepage")
+    return render_template('index.html', seeds=project.images, title="Homepage")
 
 
 # Referenční obrázky
 @app.route("/images")
 def images():
-    return render_template('images.html', seeds=project.image_seeds, title="Images")
+    return render_template('images.html', seeds=project.images, title="Images")
 
 
 # Stylovací obrázky
 @app.route("/styles")
 def styles():
-    return render_template('styles.html', seeds=project.style_seeds, title="Styles")
+    return render_template('styles.html', seeds=project.styles, title="Styles")
 
 
-# System info
+# System info @todo nebude samostatná routa. Bude se zobrazovat někde v toolbaru
 @app.route("/sysinfo")
 def sysinfo():
     sysinfo_data = {
@@ -78,23 +79,24 @@ def sysinfo():
 @app.route("/api/project")
 def get_project():
     return {
-        'data_dir': project.data_dir,
-        'images': project.image_seeds,
-        'styles': project.style_seeds,
+        'images': project.images.all(),
+        'styles': project.styles.all(),
     }
 
 
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
-    worker_que.append({'action': 'add_image', 'seed': seed})
-    time.sleep(3)  # Wait 3 seconds if image is already made.
+    project.images.insert({'seed': seed})
+    worker_que.append({'action': 'generate_image', 'seed': seed})
+    time.sleep(0)  # Wait 3 seconds if image is already made.
     return get_project()
 
 
 @app.route("/api/add-style/<seed>")
 def add_style(seed):
-    worker_que.append({'action': 'add_style', 'seed': seed})
-    return {'seed': seed}
+    project.styles.insert({'seed': seed})
+    worker_que.append({'action': 'generate_image', 'seed': seed})
+    return get_project()
 
 
 @app.route("/api/remove-image/<seed>")
@@ -111,17 +113,15 @@ def remove_style(seed):
 
 def background_worker():
     """ Background worker running in thread """
-    def log(message: str): print(colored("Worker:", "green"), colored(message, "yellow"))
+    def log(message: str): print(colored("Worker:", "green"), colored(message, "yellow"), " ")
     log("start")
     while True:
         try:
             task = worker_que.pop(0)
             # log("task=%s seed = %d" % (task['action'], task['seed'])
             log(task)
-            if task['action'] == 'add_image':
-                project.add_image(task['seed'])
-            elif task['action'] == 'add_style':
-                project.add_style(task['seed'])
+            if task['action'] == 'generate_image':
+                project.generate_image(task['seed'])
             else:
                 log("Uknown task")
         except Exception as e:
@@ -130,10 +130,10 @@ def background_worker():
 
 
 if __name__ == "__main__":
-    # Start background worker
-    Thread(target=background_worker).start()
-
     print("Colab:", IN_COLAB)
+
+    Thread(target=background_worker).start()  # Start background worker
+
     if IN_COLAB:
         run_with_ngrok(app)  # In Google Colab run with Ngrok
         app.run()  # Start app

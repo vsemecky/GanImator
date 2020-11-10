@@ -1,8 +1,12 @@
 #react-animator aside img {
     cursor: pointer;
-    awidth-max: 64px;
-    max-width: 128px;
+    min-width: 128px;
+    min-width: 128px;
+    max-height: 128px;
+    max-height: 128px;
     margin: 0 1em 1em 0;
+    width: 128px;
+    height: 128px;
 }
 
 #screen {
