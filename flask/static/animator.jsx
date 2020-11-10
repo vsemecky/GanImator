@@ -5,6 +5,7 @@ class Animator extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            is_loaded: false,
             images: [],
             styles: [],
             current_image: 0,
@@ -19,6 +20,7 @@ class Animator extends React.Component {
                 (result) => {
                     console.log("componentDidMount() RESULT", result);
                     result.current_image = result.images[0];
+                    result.is_loaded = true;
                     this.setState(result);
                     console.log("componentDidMount() STATE", this.state);
                 },
@@ -58,14 +60,16 @@ class Animator extends React.Component {
     }
 
     render() {
+        if (!this.state.is_loaded) return (<h1>Loading...</h1>);
+
         return (
             <div className="row">
                 <article id="screen" className="col">
-                    <img id="player" className="img-fluid" src={"/project/images/" + this.state.current_image + ".jpg"} title={this.state.current_image} />
+                    <img id="player" className="img-fluid" src={"/project/seeds/" + this.state.current_image + ".jpg"} title={this.state.current_image} />
                 </article>
                 <aside className="col-3">
-                    {this.state.images.map(seed => {
-                        return <img key={seed} className="img-fluid" src={"/project/images/" + seed + ".jpg"} title={seed} onClick={() => this.seedOnClick(seed)} />;
+                    {this.state.images.map(image => {
+                        return <img key={image.seed} className="img-fluid" src={"/project/seeds/" + image.seed + ".jpg"} title={image.seed} onClick={() => this.seedOnClick(image.seed)} />;
                     })}
                     <button type="button" className="btn btn-success" onClick={() => this.addImageClick()}>Add</button>
                 </aside>

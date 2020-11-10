@@ -19,8 +19,8 @@ class Project:
 
     def __init__(self, data_dir):
         self.data_dir = data_dir
-        self.image_dir = data_dir + "/images"
-        os.makedirs(data_dir + "/images", exist_ok=True)
+        self.image_dir = data_dir + "/seeds"
+        os.makedirs(self.image_dir, exist_ok=True)
 
         self.db = TinyDB(data_dir + '/project.json', sort_keys=False, indent=4, separators=(',', ': '))
         self.images = self.db.table('images')
@@ -40,4 +40,4 @@ class Project:
             image_pil.save("%s/seeds/%s.jpg" % (self.data_dir, seed))
             print("generate_image", seed, colored("OK", 'green'))
         except Exception as e:
-            print("generate_image", seed, colored("ERROR", 'red'))
+            print("generate_image", seed, colored("ERROR", 'red'), e)

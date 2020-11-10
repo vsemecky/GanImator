@@ -1,4 +1,5 @@
 import sys
+from pprint import pprint
 from threading import Thread
 import time
 from random import random
@@ -113,19 +114,22 @@ def remove_style(seed):
 
 def background_worker():
     """ Background worker running in thread """
-    def log(message: str): print(colored("Worker:", "green"), colored(message, "yellow"), " ")
+    def log(message): print(colored("Worker:", "green"), colored(message, "yellow"), " ")
     log("start")
     while True:
         try:
             task = worker_que.pop(0)
-            # log("task=%s seed = %d" % (task['action'], task['seed'])
             log(task)
             if task['action'] == 'generate_image':
                 project.generate_image(task['seed'])
             else:
                 log("Uknown task")
+        except IndexError:
+            # Wait a second, que is empty
+            time.sleep(2)
         except Exception as e:
-            # log("Que is empty")
+            pprint(e)
+            log(e)
             time.sleep(2)
 
 
