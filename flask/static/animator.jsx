@@ -44,9 +44,7 @@ class Animator extends React.Component {
             .then(
                 (result) => {
                     console.log("addImage() RESULT", result);
-                    this.setState({
-                        isLoaded: true,
-                    });
+                    this.setState(result);
                     console.log("addImage() STATE", this.state);
                 },
                 (error) => {
