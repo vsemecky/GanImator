@@ -81,13 +81,13 @@ def get_project():
         'data_dir': project.data_dir,
         'images': project.image_seeds,
         'styles': project.style_seeds,
-        'current_image': project.image_seeds[0],
     }
 
 
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
     worker_que.append({'action': 'add_image', 'seed': seed})
+    time.sleep(3)  # Wait 3 seconds if image is already made.
     return get_project()
 
 

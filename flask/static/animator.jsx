@@ -13,22 +13,23 @@ class Animator extends React.Component {
     }
 
     componentDidMount() {
-    fetch("/api/project")
-        .then(res => res.json())
-        .then(
-            (result) => {
-                console.log("componentDidMount() RESULT", result);
-                this.setState(result);
-                console.log("componentDidMount() STATE", this.state);
-            },
-            (error) => {
-                console.log("componentDidMount() ERROR", error);
-                this.setState({
-                    isLoaded: true,
-                    error
-                });
-            }
-        )
+        fetch("/api/project")
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log("componentDidMount() RESULT", result);
+                    result.current_image = result.images[0];
+                    this.setState(result);
+                    console.log("componentDidMount() STATE", this.state);
+                },
+                (error) => {
+                    console.log("componentDidMount() ERROR", error);
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
     }
 
     seedOnClick(seed) {
