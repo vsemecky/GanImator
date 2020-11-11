@@ -116,6 +116,11 @@ def background_worker():
     """ Background worker running in thread """
     def log(message): print(colored("Worker:", "green"), colored(message, "yellow"), " ")
     log("start")
+
+    # Feed que with missing media
+    for seed in project.get_missing_seeds():
+        worker_que.append({'action': 'generate_image', 'seed': seed})
+
     while True:
         try:
             task = worker_que.pop(0)

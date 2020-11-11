@@ -41,3 +41,13 @@ class Project:
             print("generate_image", seed, colored("OK", 'green'))
         except Exception as e:
             print("generate_image", seed, colored("ERROR", 'red'), e)
+
+    # @todo Kontrolovat, jestli jsou opravdu "missing"
+    # @todo A nebo ne? Pregenerovat na zacatku vsechny obrazky?
+    def get_missing_seeds(self):
+        seeds = []
+        for image in self.images.all():
+            seeds.append(image['seed'])
+        for style in self.styles.all():
+            seeds.append(style['seed'])
+        return seeds
