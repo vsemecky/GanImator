@@ -1,3 +1,4 @@
+import argparse
 import sys
 from pprint import pprint
 from threading import Thread
@@ -10,16 +11,22 @@ from tinydb import Query
 import project
 
 
+# Load ganimator lib only in Colab
 try:
     import google.colab  # Check Colab
-    from ganimator import *  # Load ganimator lib only in Colab
+    from ganimator import *
     IN_COLAB = True
 except Exception:
     IN_COLAB = False
 
-if len(sys.argv) < 2:
-    exit("Missing project dir.\n\nUsage:\n\tpython web.py \"/path/to/my project\"")
-project = project.Project(sys.argv[1])  # The first command line argument
+# Parse commandline parameters
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('--ngrok', nargs='?', const=True, default=False, help='Run Flask with Ngrok')
+parser.add_argument('--debug', nargs='?', const=True, default=False, help='Run Flask in debug mode')
+parser.add_argument('--project-dir', help='Path to project folder', required=True)
+config = parser.parse_args()
+
+project = project.Project(config.project_dir)
 
 """ Que of jobs should be done by worker """
 worker_que = []  # array of {'action': string, 'seed': int}
@@ -71,7 +78,6 @@ def add_style(seed):
     worker_que.append({'action': 'generate_image', 'seed': seed})
     return get_project()
 
-
 @app.route("/api/remove-image/<int:seed>")
 def remove_image(seed: int):
     project.images.remove(Query().seed == seed)
@@ -114,12 +120,13 @@ def background_worker():
 
 
 if __name__ == "__main__":
+
     print("Colab:", IN_COLAB)
 
     Thread(target=background_worker).start()  # Start background worker
 
-    if IN_COLAB:
-        run_with_ngrok(app)  # In Google Colab run with Ngrok
+    if config.ngrok:
+        run_with_ngrok(app)
         app.run()  # Start app
     else:
-        app.run(debug=True)  # Start app
+        app.run(debug=config.debug)  # Start app
