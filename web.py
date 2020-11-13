@@ -58,22 +58,24 @@ def get_project():
 
 @app.route("/api/add-image/<seed>")
 def add_image(seed=None):
-    project.images.insert({'seed': seed})
+    project.images.insert({'seed': int(seed), 'style': False, 'ready': False})
     worker_que.append({'action': 'generate_image', 'seed': seed})
+    worker_que.append({'action': 'generate_videos', 'seed': seed})
     time.sleep(0)  # Wait 3 seconds if image is already made.
     return get_project()
 
 
 @app.route("/api/add-style/<seed>")
 def add_style(seed):
-    project.styles.insert({'seed': seed})
+    project.styles.insert({'seed': int(seed), 'ready': False})
     worker_que.append({'action': 'generate_image', 'seed': seed})
     return get_project()
 
 
-@app.route("/api/remove-image/<seed>")
-def remove_image(seed):
+@app.route("/api/remove-image/<int:seed>")
+def remove_image(seed: int):
     project.images.remove(Query().seed == seed)
+    project.images.remove(Query().seed == str(seed))  # @todo tohle casem odstranit. Budem pouzivat jen int.
     return get_project()
 
 
@@ -100,6 +102,8 @@ def background_worker():
             log(task)
             if task['action'] == 'generate_image':
                 project.generate_image(task['seed'])
+            elif task['action'] == 'generate_videos':
+                project.generate_videos(task['seed'])
             else:
                 log("Uknown task")
         except IndexError:
