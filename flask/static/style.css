@@ -1,4 +1,33 @@
-#react-animator aside img {
+/**
+ * General
+ */
+body {
+    background: #000;
+}
+
+/**
+ * Image/video player
+ */
+#player {
+    text-align: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+#player img {
+    max-height: calc(100vh - 88px);
+}
+
+/**
+ * Sidebar
+ */
+aside {
+    padding-top: 1em;
+}
+aside div.thumb {
+    display:inline-block;
+    position:relative;
+}
+aside div.thumb img {
     cursor: pointer;
     min-width: 77px;
     min-height: 77px;
@@ -6,22 +35,12 @@
     max-height: 128px;
     margin: 0 1em 1em 0;
 }
-
-#screen {
-    text-align: center;
-    margin-top: 1em;
+aside div.thumb button {
+    position:absolute;
+    top: 4px;
+    right: 20px;
+    font-size: 8px;
 }
-
-#player {
-    max-height: 90vh;
-    max-width: 100vw;
-}
-
-aside {
-    background: gray;
-    padding-top: 1em;
-}
-
-h1 {
-    align: center;
+aside.hide-overlays div.thumb button {
+    display: none;
 }

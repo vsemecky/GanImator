@@ -60,19 +60,42 @@ class Animator extends React.Component {
             )
     }
 
+    removeImageClick(seed) {
+        if (confirm("Delete image seed #" + seed + " ?")) {
+            console.log("Remove image...", seed);
+            fetch("/api/remove-image/" + seed)
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        console.log("...delete image Done.", seed);
+                        this.setState(result);
+                    },
+                    (error) => {
+                        this.setState({isLoaded: true, error});
+                    }
+                )
+        }
+    }
+
     render() {
         if (!this.state.is_loaded) return (<h1>Loading...</h1>);
 
         return (
             <div className="row">
-                <article id="screen" className="col">
-                    <img id="player" className="img-fluid" src={"/project/seeds/" + this.state.current_seed + ".jpg"} title={this.state.current_seed} />
-                </article>
+                <main id="player" className="col-9">
+                    <img className="img-fluid" src={"/project/seeds/" + this.state.current_seed + ".jpg"} title={this.state.current_seed} />
+                </main>
                 <aside className="col-3">
                     {this.state.images.map(image => {
-                        return <img key={image.seed} className="img-fluid" src={"/project/seeds/" + image.seed + ".jpg"} title={image.seed} onClick={() => this.seedOnClick(image.seed)} />;
+                        return (
+                            <div key={image.seed} className="thumb">
+                                <img className="img-fluid" src={"/project/seeds/" + image.seed + ".jpg"} title={image.seed} onClick={() => this.seedOnClick(image.seed)} />
+                                <button type="button" className="btn btn-sm btn-outline-light" onClick={() => this.removeImageClick(image.seed)}>X</button>
+                            </div>
+                        );
                     })}
-                    <button type="button" className="btn btn-success" onClick={() => this.addImageClick()}>Add</button>
+                    <br />
+                    <button type="button" className="btn btn-outline-light" onClick={() => this.addImageClick()}>+ Add random seed</button>
                 </aside>
             </div>);
     }

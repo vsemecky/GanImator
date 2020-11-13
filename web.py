@@ -6,6 +6,7 @@ from random import random
 from flask import Blueprint, Flask, render_template, redirect, url_for, abort
 from flask_ngrok import run_with_ngrok
 from termcolor import colored
+from tinydb import Query
 
 import project
 import random
@@ -102,14 +103,17 @@ def add_style(seed):
 
 @app.route("/api/remove-image/<seed>")
 def remove_image(seed):
-    project.remove_image(seed)
-    return redirect(url_for('images'))
+#     Image = Query()
+#     project.images.remove(Image.seed == seed)
+    project.images.remove(Query().seed == seed)
+    return get_project()
 
 
 @app.route("/api/remove-style/<seed>")
 def remove_style(seed):
-    project.remove_style(seed)
-    return redirect(url_for('styles'))
+    Style = Query()
+    project.styles.remove(Style.seed == seed)
+    return get_project()
 
 
 def background_worker():
