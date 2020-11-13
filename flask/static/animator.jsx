@@ -87,9 +87,10 @@ class Animator extends React.Component {
                 </main>
                 <aside className="col-3">
                     {this.state.images.map(image => {
+                        const imageUrl = (image.ready) ? "/project/seeds/" + image.seed + ".jpg" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
                         return (
                             <div key={image.seed} className="thumb">
-                                <img className="img-fluid" src={"/project/seeds/" + image.seed + ".jpg"} title={image.seed} onClick={() => this.seedOnClick(image.seed)} />
+                                <img className="img-fluid" src={imageUrl} title={image.seed} onClick={() => this.seedOnClick(image.seed)} />
                                 <button type="button" className="btn btn-sm btn-outline-light" onClick={() => this.removeImageClick(image.seed)}>X</button>
                             </div>
                         );
