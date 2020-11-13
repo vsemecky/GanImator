@@ -33,7 +33,9 @@ class Project:
         print("Network (PKL):", pkls[0], "\n")
         return pkls[0]
 
-    # @todo Skip if image exists
+    def get_seed_filename(self, seed):
+        return "{}/{}.jpg".format(self.image_dir, seed)
+
     def generate_image(self, seed):
         try:
             image_pil = generate_image(pkl=self.pkl, seed=int(seed))
@@ -42,12 +44,17 @@ class Project:
         except Exception as e:
             print("generate_image", seed, colored("ERROR", 'red'), e)
 
-    # @todo Kontrolovat, jestli jsou opravdu "missing"
-    # @todo A nebo ne? Pregenerovat na zacatku vsechny obrazky?
     def get_missing_seeds(self):
         seeds = []
+
         for image in self.images.all():
-            seeds.append(image['seed'])
+            filename = self.get_seed_filename(image['seed'])
+            if not os.path.isfile(filename):
+                seeds.append(image['seed'])
+
         for style in self.styles.all():
-            seeds.append(style['seed'])
+            filename = self.get_seed_filename(style['seed'])
+            if not os.path.isfile(filename):
+                seeds.append(style['seed'])
+
         return seeds

@@ -2,14 +2,12 @@ import sys
 from pprint import pprint
 from threading import Thread
 import time
-from random import random
 from flask import Blueprint, Flask, render_template, redirect, url_for, abort
 from flask_ngrok import run_with_ngrok
 from termcolor import colored
 from tinydb import Query
 
 import project
-import random
 
 
 try:
@@ -32,7 +30,7 @@ project_blueprint = Blueprint(
     'project_blueprint',
     __name__,
     static_url_path='/project',
-    static_folder=project.data_dir,
+    static_folder=project.data_dir
 )
 
 app = Flask(
@@ -48,34 +46,6 @@ app.register_blueprint(project_blueprint)
 @app.route("/")
 def main():
     return render_template('index.html', seeds=project.images, title="Homepage")
-
-
-# Referenční obrázky
-@app.route("/images")
-def images():
-    return render_template('images.html', seeds=project.images, title="Images")
-
-
-# Stylovací obrázky
-@app.route("/styles")
-def styles():
-    return render_template('styles.html', seeds=project.styles, title="Styles")
-
-
-# System info @todo nebude samostatná routa. Bude se zobrazovat někde v toolbaru
-@app.route("/sysinfo")
-def sysinfo():
-    sysinfo_data = {
-        'cpu_cores': 2,
-        'cpu_threads': 4,
-        'ram': 24,
-        'gpu_ram': 16,
-        'gpu_name': "V100",
-        'hdd_space': "100",
-        'hdd_space_free': "30",
-        'Running in Colab': IN_COLAB,
-    }
-    return render_template('sysinfo.html', sysinfo=sysinfo_data)
 
 
 @app.route("/api/project")
@@ -103,16 +73,13 @@ def add_style(seed):
 
 @app.route("/api/remove-image/<seed>")
 def remove_image(seed):
-#     Image = Query()
-#     project.images.remove(Image.seed == seed)
     project.images.remove(Query().seed == seed)
     return get_project()
 
 
 @app.route("/api/remove-style/<seed>")
 def remove_style(seed):
-    Style = Query()
-    project.styles.remove(Style.seed == seed)
+    project.styles.remove(Query().seed == seed)
     return get_project()
 
 
@@ -122,9 +89,11 @@ def background_worker():
     log("start")
 
     # Feed que with missing media
+    print("Missing seeds:", project.get_missing_seeds())
     for seed in project.get_missing_seeds():
         worker_que.append({'action': 'generate_image', 'seed': seed})
 
+    # Background loop
     while True:
         try:
             task = worker_que.pop(0)
@@ -134,12 +103,10 @@ def background_worker():
             else:
                 log("Uknown task")
         except IndexError:
-            # Wait a second, que is empty
-            time.sleep(2)
+            time.sleep(2)  # Wait a second, que is empty
         except Exception as e:
             pprint(e)
             log(e)
-            time.sleep(2)
 
 
 if __name__ == "__main__":
