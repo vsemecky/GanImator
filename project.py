@@ -33,6 +33,9 @@ class Project:
 
     def get_pkl_filename(self):
         pkls = glob.glob(self.data_dir + '/*.pkl')
+        if len(pkls) != 1:
+            print("There should be exactly one *.pkl file in project directory. Found ", len(pkls))
+            exit()
         print("Network (PKL):", pkls[0], "\n")
         return pkls[0]
 
