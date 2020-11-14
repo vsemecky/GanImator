@@ -68,13 +68,16 @@ class Animator extends React.Component {
 
     removeImageClick(seed) {
         if (confirm("Delete image seed #" + seed + " ?")) {
-            console.log("Remove image...", seed);
             fetch("/api/remove-image/" + seed)
                 .then(res => res.json())
                 .then(
                     (result) => {
-                        console.log("...delete image Done.", seed);
+                        console.log("Image #", seed, " removed.");
                         this.setState(result);
+                        // If we just deleted current_image, reset current_image to the first one
+                        if (seed == this.state.current_image.seed) {
+                            this.setState({current_image: this.state.images[0]});
+                        }
                     },
                     (error) => {
                         this.setState({isLoaded: true, error});
