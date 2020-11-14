@@ -22,7 +22,6 @@ class Animator extends React.Component {
                 (result) => {
                     console.log("componentDidMount() RESULT", result);
                     // Enrich result
-                    result.current_seed = result.images[0].seed;
                     result.current_image = result.images[0];
                     result.is_loaded = true;
                     this.setState(result);
@@ -44,7 +43,7 @@ class Animator extends React.Component {
      */
     seedOnClick(image) {
         console.log("seedOnClick:", image);
-        this.setState({ current_seed: image.seed, current_image: image});
+        this.setState({current_image: image});
     }
 
     addImageClick() {
@@ -96,7 +95,7 @@ class Animator extends React.Component {
         return (
             <div className="row">
                 <main id="player" className="col-9">
-                    <img className="img-fluid" src={this.getImageUrl(this.state.current_image)} title={this.state.current_seed} />
+                    <img className="img-fluid" src={this.getImageUrl(this.state.current_image)} title={this.state.current_image.seed} />
                 </main>
                 <aside className="col-3">
                     {this.state.images.map(image => {
