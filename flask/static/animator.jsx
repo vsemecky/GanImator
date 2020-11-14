@@ -8,7 +8,9 @@ class Animator extends React.Component {
             is_loaded: false,
             images: [],
             styles: [],
-            current_seed: 0,
+            current_image: {
+                ready: false
+            },
         };
         this.render();
     }
@@ -21,6 +23,7 @@ class Animator extends React.Component {
                     console.log("componentDidMount() RESULT", result);
                     // Enrich result
                     result.current_seed = result.images[0].seed;
+                    result.current_image = result.images[0];
                     result.is_loaded = true;
                     this.setState(result);
                     console.log("componentDidMount() STATE", this.state);
@@ -35,9 +38,13 @@ class Animator extends React.Component {
             )
     }
 
-    seedOnClick(seed) {
-        console.log("seedOnClick", seed);
-        this.setState({ current_seed: seed});
+    /**
+     * User clicked on the image => Set the new current image.
+     * @param image
+     */
+    seedOnClick(image) {
+        console.log("seedOnClick:", image);
+        this.setState({ current_seed: image.seed, current_image: image});
     }
 
     addImageClick() {
@@ -77,20 +84,25 @@ class Animator extends React.Component {
         }
     }
 
+    getImageUrl(image) {
+        return image.ready
+            ? "/project/seeds/" + image.seed + ".jpg"
+            : "https://picsum.photos/id/" + image.seed + "/768/1280"; // Placeholder if image is not ready yet
+    }
+
     render() {
         if (!this.state.is_loaded) return (<h1>Loading...</h1>);
 
         return (
             <div className="row">
                 <main id="player" className="col-9">
-                    <img className="img-fluid" src={"/project/seeds/" + this.state.current_seed + ".jpg"} title={this.state.current_seed} />
+                    <img className="img-fluid" src={this.getImageUrl(this.state.current_image)} title={this.state.current_seed} />
                 </main>
                 <aside className="col-3">
                     {this.state.images.map(image => {
-                        const imageUrl = (image.ready) ? "/project/seeds/" + image.seed + ".jpg" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
                         return (
                             <div key={image.seed} className="thumb">
-                                <img className="img-fluid" src={imageUrl} title={image.seed} onClick={() => this.seedOnClick(image.seed)} />
+                                <img className="img-fluid" src={this.getImageUrl(image)} title={image.seed} onClick={() => this.seedOnClick(image)} />
                                 <button type="button" className="btn btn-sm btn-outline-light" onClick={() => this.removeImageClick(image.seed)}>X</button>
                             </div>
                         );
