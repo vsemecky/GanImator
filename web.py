@@ -36,7 +36,7 @@ worker_que = []  # array of {'action': string, 'seed': int}
 project_blueprint = Blueprint(
     'project_blueprint',
     __name__,
-    static_url_path='/project',
+    static_url_path='/data',
     static_folder=project.data_dir
 )
 
