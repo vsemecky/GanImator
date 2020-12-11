@@ -45,9 +45,13 @@ class Project:
     def generate_image(self, seed):
         try:
             filename = self.get_seed_filename(seed)
-            image_pil = generate_image(pkl=self.pkl, seed=int(seed))
-            image_pil.save(filename)
-            print("generate_image", seed, colored("OK", 'green'), filename)
+            if os.path.isfile(filename):
+                print("generate_image", seed, colored("EXIST", 'yellow'), filename)
+            else:
+                image_pil = generate_image(pkl=self.pkl, seed=int(seed))
+                image_pil.save(filename)
+                print("generate_image", seed, colored("OK", 'green'), filename)
+            self.images.update({'ready': True}, Query().seed == seed)
         except Exception as e:
             print("generate_image", seed, colored("ERROR", 'red'), e)
 

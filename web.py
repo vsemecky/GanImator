@@ -1,9 +1,9 @@
 import argparse
-import sys
+import os
 from pprint import pprint
 from threading import Thread
 import time
-from flask import Blueprint, Flask, render_template, redirect, url_for, abort
+from flask import Blueprint, Flask, render_template, redirect, url_for, abort, send_from_directory, jsonify
 from flask_ngrok import run_with_ngrok
 from termcolor import colored
 from tinydb import Query
@@ -36,14 +36,15 @@ worker_que = []  # array of {'action': string, 'seed': int}
 project_blueprint = Blueprint(
     'project_blueprint',
     __name__,
-    static_url_path='/data',
+    static_url_path='/project',
     static_folder=project.data_dir
 )
 
 app = Flask(
     __name__,
-    static_url_path='/static',
-    static_folder="flask/static",
+    # static_url_path='/static',
+    static_url_path='/',
+    static_folder="client/public",
     template_folder="flask/templates"
 )
 app.register_blueprint(project_blueprint)
@@ -52,21 +53,35 @@ app.register_blueprint(project_blueprint)
 # Homepage
 @app.route("/")
 def main():
-    return render_template('index.html', seeds=project.images, title="Homepage")
+    return send_from_directory('client/public', 'index.html')
 
 
 @app.route("/api/project")
 def get_project():
-    return {
-        'images': project.images.all(),
+    images = []
+    for image in project.images.all():
+        if image['ready']:
+            image['url'] = "/project/seeds/" + str(image['seed']) + ".jpg"
+        else:
+            image['url'] = "https://via.placeholder.com/768x1280.png?text=" + str(image['seed'])
+        images.append(image)
+
+    return jsonify({
+        'images': images,
         'styles': project.styles.all(),
-    }
+    })
 
 
-@app.route("/api/add-image/<seed>")
-def add_image(seed=None):
-    project.images.insert({'seed': int(seed), 'style': False, 'ready': False})
-    worker_que.append({'action': 'generate_image', 'seed': seed})
+@app.route("/api/add-image/<int:seed>")
+def add_image(seed):
+    is_ready = os.path.isfile(project.get_seed_filename(seed))
+    project.images.insert({
+        'seed': int(seed),
+        'style': False,
+        'ready': is_ready
+    })
+    if not is_ready:
+        worker_que.append({'action': 'generate_image', 'seed': seed})
     worker_que.append({'action': 'generate_videos', 'seed': seed})
     time.sleep(0)  # Wait 3 seconds if image is already made.
     return get_project()
@@ -77,6 +92,7 @@ def add_style(seed):
     project.styles.insert({'seed': int(seed), 'ready': False})
     worker_que.append({'action': 'generate_image', 'seed': seed})
     return get_project()
+
 
 @app.route("/api/remove-image/<int:seed>")
 def remove_image(seed: int):
@@ -91,6 +107,7 @@ def remove_style(seed):
     return get_project()
 
 
+# @todo Worker do samostatne tridy BackgroundWorker(data_dir)
 def background_worker():
     """ Background worker running in thread """
     def log(message): print(colored("Worker:", "green"), colored(message, "yellow"), " ")
@@ -108,6 +125,7 @@ def background_worker():
             log(task)
             if task['action'] == 'generate_image':
                 project.generate_image(task['seed'])
+            #     Nastavit 'ready'
             elif task['action'] == 'generate_videos':
                 project.generate_videos(task['seed'])
             else:

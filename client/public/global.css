@@ -1,63 +1,46 @@
-html, body {
-	position: relative;
-	width: 100%;
-	height: 100%;
-}
-
+/**
+ * General
+ */
 body {
-	color: #333;
-	margin: 0;
-	padding: 8px;
-	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	background: #000;
 }
 
-a {
-	color: rgb(0,100,200);
-	text-decoration: none;
+/**
+ * Image/video player
+ */
+#player {
+	text-align: center;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+#player img {
+	max-height: calc(100vh - 88px);
 }
 
-a:hover {
-	text-decoration: underline;
+/**
+ * Sidebar
+ */
+aside {
+	padding-top: 1em;
 }
-
-a:visited {
-	color: rgb(0,80,160);
+aside div.thumb {
+	display:inline-block;
+	position:relative;
 }
-
-label {
-	display: block;
+aside div.thumb img {
+	cursor: pointer;
+	min-width: 77px;
+	min-height: 77px;
+	max-width: 128px;
+	max-height: 128px;
+	margin: 0 1em 1em 0;
 }
-
-input, button, select, textarea {
-	font-family: inherit;
-	font-size: inherit;
-	-webkit-padding: 0.4em 0;
-	padding: 0.4em;
-	margin: 0 0 0.5em 0;
-	box-sizing: border-box;
-	border: 1px solid #ccc;
-	border-radius: 2px;
+aside div.thumb button {
+	position:absolute;
+	top: 4px;
+	right: 20px;
+	font-size: 8px;
 }
-
-input:disabled {
-	color: #ccc;
-}
-
-button {
-	color: #333;
-	background-color: #f4f4f4;
-	outline: none;
-}
-
-button:disabled {
-	color: #999;
-}
-
-button:not(:disabled):active {
-	background-color: #ddd;
-}
-
-button:focus {
-	border-color: #666;
+aside.hide-overlays div.thumb button {
+	display: none;
 }

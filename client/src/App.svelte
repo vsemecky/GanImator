@@ -3,6 +3,10 @@
 	export let name;
 
 	let images = [];
+	let current_image = {
+		seed: 0,
+		url: "",
+	};
 
 	/**
 	 * Fetch Project data
@@ -11,15 +15,10 @@
 		const res = await fetch('/api/project');
 		let project = await res.json();
 		images = project.images;
+		current_image = images[0];
 		console.log("Project", project);
 		console.log("Images", project.images);
 	});
-
-	function getImageUrl(image) {
-		return image && image.ready
-			? "/project/seeds/" + image.seed + ".jpg"
-			: "https://picsum.photos/768/1280"; // Placeholder if image is not ready yet
-	}
 
 	/**
 	 * User clicked on the image => Set the new current image.
@@ -27,9 +26,28 @@
 	 */
 	function seedOnClick(image) {
 		console.log("seedOnClick:", image);
-		this.setState({current_image: image});
+		current_image = image;
 	}
 
+	async function addImageClick() {
+		console.log("addImageClick()");
+		let seed = prompt("Enter seed (number 1..1000):", (Math.floor(Math.random() * 1000) + 1).toString());
+		if (seed != null) {
+			const res = await fetch("/api/add-image/" + seed);
+			let project = await res.json();
+			images = project.images;
+			console.log("addImage() RESULT", images);
+		}
+	}
+
+	async function removeImageClick(seed) {
+		console.log("removeImageClick()");
+		if (confirm("Delete image seed #" + seed + " ?")) {
+			const res = await fetch("/api/remove-image/" + seed);
+			let project = await res.json();
+			images = project.images;
+		}
+	}
 </script>
 
 <style>
@@ -38,17 +56,16 @@
 
 <div class="row">
 	<section id="player" class="col-9">
-		[PLAYER]
+		<img class="img-fluid" src={current_image.url} title={current_image.seed} />
 	</section>
 	<aside id="sidebar" class="col-3">
 		{#each images as image}
-			<div key={image.seed} class="thumb">
-				<img class="img-fluid" src={getImageUrl(image)} title={image.seed} />
-				<button type="button" class="btn btn-sm btn-outline-light" onClick={() => this.removeImageClick(image.seed)}>X</button>
-			</div>
+		<div  class="thumb">
+			<img class="img-fluid" src={image.url} title={image.seed} on:click={seedOnClick(image)} />
+			<button type="button" class="btn btn-sm btn-outline-light" on:click={removeImageClick(image.seed)}>X</button>
+		</div>
 		{/each}
 		<br />
-		<button type="button" class="btn btn-outline-light" onClick={() => this.addImageClick()}>+ Add random seed</button>
+		<button type="button" class="btn btn-outline-light" on:click={addImageClick}>+ Add random seed</button>
 	</aside>
 </div>
-
