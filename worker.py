@@ -74,6 +74,9 @@ class BackgroundWorker(object):
         for seed in missing_seeds:
             self.que.append({'action': 'generate_image', 'seed': seed})
 
+        # Preload neurals (force ganimator to load pkl and store in memory cache)
+        load_network(self.project.pkl)
+
         # Background loop
         while True:
             try:
