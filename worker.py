@@ -68,17 +68,46 @@ class BackgroundWorker(object):
         except Exception as e:
             print("generate_image", seed, colored("ERROR", 'red'), e)
 
-    def generate_videos(self, seed):
-        """ Generate short interpolation videos between `seed` and all other seeds """
-        for image in self.images.all():
-            try:
-                print("generate_videos", seed, "=>", image['seed'])
-                clip = latent_interpolation_clip(pkl=self.project.pkl, psi=self.psi, mp4_fps=30, duration=self.duration, seeds=[seed, image['seed']])
-                clip.write_videofile(
-                    filename=self.get_interpolation_filename(seed, image['seed']),
-                    **self.video_options)
-            except Exception as e:
-                print("generate_videos", seed, "=>", image['seed'], colored("ERROR", 'red'), e)
+    # def generate_videos(self, seed):
+    #     """ Generate short interpolation videos between `seed` and all other seeds """
+    #     for image in self.images.all():
+    #         try:
+    #             print("generate_videos", seed, "=>", image['seed'])
+    #             clip = latent_interpolation_clip(pkl=self.project.pkl, psi=self.psi, mp4_fps=30, duration=self.duration, seeds=[seed, image['seed']])
+    #             clip.write_videofile(
+    #                 filename=self.get_interpolation_filename(seed, image['seed']),
+    #                 **self.video_options)
+    #         except Exception as e:
+    #             print("generate_videos", seed, "=>", image['seed'], colored("ERROR", 'red'), e)
+
+    def generate_missing_videos(self):
+        """ Generate all missing interpolation videos """
+        for image1 in self.images.all():
+            for image2 in self.images.all():
+                try:
+                    # Skip interpolation between identical seeds
+                    if image1['seed'] == image2['seed']:
+                        print("generate_videos", image1['seed'], "=>", image2['seed'], colored("SKIP selfie", 'yellow'))
+                        continue
+                    filename = self.get_interpolation_filename(image1['seed'], image2['seed'])
+                    # Skip if video already exists
+                    if os.path.isfile(filename):
+                        print("Generating video", image1['seed'], "=>", image2['seed'], colored("EXIST", 'yellow'))
+
+                    print("Generating video", image1['seed'], "=>", image2['seed'])
+                    clip = latent_interpolation_clip(
+                        pkl=self.project.pkl,
+                        psi=self.psi,
+                        mp4_fps=30,
+                        duration=self.duration,
+                        seeds=[image1['seed'], image2['seed']]
+                    )
+                    clip.write_videofile(
+                        filename=filename,
+                        **self.video_options
+                    )
+                except Exception as e:
+                    print("generate_videos", image1['seed'], "=>", image2['seed'], colored("ERROR", 'red'), e)
 
     def run(self):
         """ Start background worker """
@@ -104,7 +133,7 @@ class BackgroundWorker(object):
                     self.generate_image(task['seed'])
                 #     Nastavit 'ready'
                 elif task['action'] == 'generate_videos':
-                    self.generate_videos(task['seed'])
+                    self.generate_missing_videos()
                 else:
                     log("Uknown task")
             except IndexError:
