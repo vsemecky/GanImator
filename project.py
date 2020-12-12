@@ -21,6 +21,7 @@ class Project:
         # Folders
         self.data_dir = data_dir
         self.image_dir = data_dir + "/seeds"
+        self.video_dir = data_dir + "/video"
         os.makedirs(self.image_dir, exist_ok=True)
 
         # JSON database

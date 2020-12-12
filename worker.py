@@ -22,16 +22,30 @@ except Exception:
 class BackgroundWorker(object):
     """ Background worker running in thread """
 
+    # Video render options
+    video_options = {
+        'preset':  "ultrafast",  # veryslow / ultrafast
+        'codec':   "libx264",
+        'bitrate': '24M',
+        'fps':     30,
+        'threads': 8,
+    }
+
     def __init__(self, project):
         self.que = []  # array of {'action': string, 'seed': int}  """ Que of jobs should be done by worker """
         self.project = project
         self.images = project.images
+        self.psi = 0.7
+        self.duration = 2  # Duration of interpolation videos [seconds]
         thread = Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
 
     def get_seed_filename(self, seed):
         return "{}/{}.jpg".format(self.project.image_dir, seed)
+
+    def get_interpolation_filename(self, seed1, seed2):
+        return "{}/{}-{}.mp4".format(self.project.video_dir, seed1, seed2)
 
     def get_missing_seeds(self):
         seeds = []
@@ -47,7 +61,7 @@ class BackgroundWorker(object):
             if os.path.isfile(filename):
                 print("generate_image", seed, colored("EXIST", 'yellow'), filename)
             else:
-                image_pil = generate_image(pkl=self.project.pkl, seed=int(seed))
+                image_pil = generate_image(pkl=self.project.pkl, seed=int(seed), psi=self.project.psi)
                 image_pil.save(filename)
                 print("generate_image", seed, colored("OK", 'green'), filename)
             self.images.update({'ready': True}, Query().seed == seed)
@@ -59,6 +73,10 @@ class BackgroundWorker(object):
         for image in self.images.all():
             try:
                 print("generate_videos", seed, "=>", image['seed'])
+                clip = latent_interpolation_clip(pkl=self.project.pkl, psi=self.psi, mp4_fps=30, duration=self.duration, seeds=[seed, image['seed']])
+                clip.write_videofile(
+                    filename=self.get_interpolation_filename(seed, image['seed']),
+                    **self.video_options)
             except Exception as e:
                 print("generate_videos", seed, "=>", image['seed'], colored("ERROR", 'red'), e)
 
@@ -75,7 +93,7 @@ class BackgroundWorker(object):
             self.que.append({'action': 'generate_image', 'seed': seed})
 
         # Preload neurals (force ganimator to load pkl and store in memory cache)
-        load_network(self.project.pkl)
+        generate_image(pkl=self.project.pkl)
 
         # Background loop
         while True:
