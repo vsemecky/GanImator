@@ -2,3 +2,4 @@ Flask
 flask-blueprint
 flask-ngrok
 tinydb
+termcolor

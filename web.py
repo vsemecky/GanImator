@@ -9,6 +9,7 @@ from termcolor import colored
 from tinydb import Query
 
 import project
+from worker import BackgroundWorker
 
 
 # Load ganimator lib only in Colab
@@ -28,8 +29,8 @@ config = parser.parse_args()
 
 project = project.Project(config.project_dir)
 
-""" Que of jobs should be done by worker """
-worker_que = []  # array of {'action': string, 'seed': int}
+# Start background worker
+worker = BackgroundWorker(project)
 
 
 """ Blueprint for serving Project static files """
@@ -74,15 +75,15 @@ def get_project():
 
 @app.route("/api/add-image/<int:seed>")
 def add_image(seed):
-    is_ready = os.path.isfile(project.get_seed_filename(seed))
+    is_ready = os.path.isfile(worker.get_seed_filename(seed))
     project.images.insert({
         'seed': int(seed),
         'style': False,
         'ready': is_ready
     })
     if not is_ready:
-        worker_que.append({'action': 'generate_image', 'seed': seed})
-    worker_que.append({'action': 'generate_videos', 'seed': seed})
+        worker.que.append({'action': 'generate_image', 'seed': seed})
+    worker.que.append({'action': 'generate_videos', 'seed': seed})
     time.sleep(0)  # Wait 3 seconds if image is already made.
     return get_project()
 
@@ -90,7 +91,7 @@ def add_image(seed):
 @app.route("/api/add-style/<seed>")
 def add_style(seed):
     project.styles.insert({'seed': int(seed), 'ready': False})
-    worker_que.append({'action': 'generate_image', 'seed': seed})
+    worker.que.append({'action': 'generate_image', 'seed': seed})
     return get_project()
 
 
@@ -107,41 +108,9 @@ def remove_style(seed):
     return get_project()
 
 
-# @todo Worker do samostatne tridy BackgroundWorker(data_dir)
-def background_worker():
-    """ Background worker running in thread """
-    def log(message): print(colored("Worker:", "green"), colored(message, "yellow"), " ")
-    log("start")
-
-    # Feed que with missing media
-    print("Missing seeds:", project.get_missing_seeds())
-    for seed in project.get_missing_seeds():
-        worker_que.append({'action': 'generate_image', 'seed': seed})
-
-    # Background loop
-    while True:
-        try:
-            task = worker_que.pop(0)
-            log(task)
-            if task['action'] == 'generate_image':
-                project.generate_image(task['seed'])
-            #     Nastavit 'ready'
-            elif task['action'] == 'generate_videos':
-                project.generate_videos(task['seed'])
-            else:
-                log("Uknown task")
-        except IndexError:
-            time.sleep(2)  # Wait a second, que is empty
-        except Exception as e:
-            pprint(e)
-            log(e)
-
-
 if __name__ == "__main__":
 
     print("Colab:", IN_COLAB)
-
-    Thread(target=background_worker).start()  # Start background worker
 
     if config.ngrok:
         run_with_ngrok(app)
