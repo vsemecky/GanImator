@@ -62,7 +62,7 @@ def get_project():
     images = []
     for image in project.images.all():
         if image['ready']:
-            image['url'] = "/project/seeds/" + str(image['seed']) + ".jpg"
+            image['url'] = "/project/image/" + str(image['seed']) + ".jpg"
         else:
             image['url'] = "https://via.placeholder.com/768x1280.png?text=" + str(image['seed'])
         images.append(image)
