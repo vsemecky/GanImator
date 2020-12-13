@@ -68,26 +68,31 @@ class BackgroundWorker(object):
         except Exception as e:
             print("generate_image", seed, colored("ERROR", 'red'), e)
 
-    # def generate_videos(self, seed):
-    #     """ Generate short interpolation videos between `seed` and all other seeds """
-    #     for image in self.images.all():
-    #         try:
-    #             print("generate_videos", seed, "=>", image['seed'])
-    #             clip = latent_interpolation_clip(pkl=self.project.pkl, psi=self.psi, mp4_fps=30, duration=self.duration, seeds=[seed, image['seed']])
-    #             clip.write_videofile(
-    #                 filename=self.get_interpolation_filename(seed, image['seed']),
-    #                 **self.video_options)
-    #         except Exception as e:
-    #             print("generate_videos", seed, "=>", image['seed'], colored("ERROR", 'red'), e)
+    def generate_missing_images(self):
+        """ Generate all missing images """
+        print(colored("Worker:", "green"), "Generating missing images")
+        for image in self.images.all():
+            try:
+                filename = self.get_seed_filename(image['seed'])
+                if os.path.isfile(filename):
+                    print("Generating image", image['seed'], colored("EXIST", 'yellow'), filename)
+                else:
+                    image_pil = generate_image(pkl=self.project.pkl, seed=int(image['seed']), psi=self.project.psi)
+                    image_pil.save(filename)
+                    print("Generating image", image['seed'], colored("OK", 'green'), filename)
+                self.images.update({'ready': True}, Query().seed == image['seed'])
+            except Exception as e:
+                print("Generating image", image['seed'], colored("ERROR", 'red'), e)
 
     def generate_missing_videos(self):
         """ Generate all missing interpolation videos """
+        print(colored("Worker:", "green"), "Generate all missing interpolation videos")
         for image1 in self.images.all():
             for image2 in self.images.all():
                 try:
                     # Skip interpolation between identical seeds
                     if image1['seed'] == image2['seed']:
-                        print("generate_videos", image1['seed'], "=>", image2['seed'], colored("SKIP selfie", 'yellow'))
+                        print("Generating video", image1['seed'], "=>", image2['seed'], colored("SKIP selfie", 'yellow'))
                         continue
                     filename = self.get_interpolation_filename(image1['seed'], image2['seed'])
                     # Skip if video already exists
@@ -107,7 +112,7 @@ class BackgroundWorker(object):
                         **self.video_options
                     )
                 except Exception as e:
-                    print("generate_videos", image1['seed'], "=>", image2['seed'], colored("ERROR", 'red'), e)
+                    print("Generating video", image1['seed'], "=>", image2['seed'], colored("ERROR", 'red'), e)
 
     def run(self):
         """ Start background worker """
@@ -116,13 +121,14 @@ class BackgroundWorker(object):
         log("start")
 
         # Feed que with missing media
-        missing_seeds = self.get_missing_seeds()
-        print("Missing seeds:", missing_seeds)
-        for seed in missing_seeds:
-            self.que.append({'action': 'generate_image', 'seed': seed})
+        # missing_seeds = self.get_missing_seeds()
+        # print("Missing seeds:", missing_seeds)
+        # for seed in missing_seeds:
+        #     self.que.append({'action': 'generate_image', 'seed': seed})
 
         # Preload neurals (force ganimator to load pkl and store in memory cache)
         generate_image(pkl=self.project.pkl)
+        self.generate_missing_images()
         self.generate_missing_videos()
 
         # Background loop
@@ -131,7 +137,7 @@ class BackgroundWorker(object):
                 task = self.que.pop(0)
                 log(task)
                 if task['action'] == 'generate_image':
-                    self.generate_image(task['seed'])
+                    self.generate_missing_images()
                 #     Nastavit 'ready'
                 elif task['action'] == 'generate_videos':
                     self.generate_missing_videos()
