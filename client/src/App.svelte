@@ -7,6 +7,8 @@
 		seed: 0,
 		url: "",
 	};
+	let current_video = "";
+	let player;
 
 	/**
 	 * Fetch Project data
@@ -14,11 +16,34 @@
 	onMount(async () => {
 		const res = await fetch('/api/project');
 		let project = await res.json();
-		images = project.images;
-		current_image = images[0];
 		console.log("Project", project);
+		images = project.images;
 		console.log("Images", project.images);
+		current_image = images[0];
+		current_video = '/project/video/' + images[0].seed + "-" + images[1].seed + ".mp4";
+		player = document.getElementById("player");
 	});
+
+	function fetchVideoAndPlay() {
+		const url = '/project/video/639-1.mp4';
+		fetch(url)
+			.then(response => response.blob())
+			.then(blob => {
+				console.log("fetchVideoAndPlay:", url);
+				console.log("#player", player);
+				console.log("blob", blob);
+				player.onloadeddata = function() {
+					player.srcObject = blob;
+				}
+				return player.play();
+			})
+			.then(_ => {
+				console.log("fetchVideoAndPlay:", "Video playback started ;)");
+			})
+			.catch(e => {
+				console.log("fetchVideoAndPlay:", "Video playback failed ;(", e);
+			})
+	}
 
 	/**
 	 * User clicked on the image => Set the new current image.
@@ -26,7 +51,14 @@
 	 */
 	function seedOnClick(image) {
 		console.log("seedOnClick:", image);
+		let video_url = '/project/video/' + current_image.seed + "-" + image.seed + ".mp4";
+		player.load();
+		player.src = video_url;
+		player.onloadeddata = function() {
+			player.play();
+		}
 		current_image = image;
+		// fetchVideoAndPlay();
 	}
 
 	async function addImageClick() {
@@ -55,8 +87,8 @@
 </style>
 
 <div class="row">
-	<section id="player" class="col-9">
-		<img class="img-fluid" src={current_image.url} title={current_image.seed} />
+	<section class="col-9">
+		<video id="player" width="480"></video>
 	</section>
 	<aside id="sidebar" class="col-3">
 		{#each images as image}
