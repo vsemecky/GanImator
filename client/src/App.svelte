@@ -88,7 +88,7 @@
 
 <div class="row">
 	<section class="col-9">
-		<video id="player" width="480"></video>
+		<video id="player" width="576" height="960"></video>
 	</section>
 	<aside id="sidebar" class="col-3">
 		{#each images as image}

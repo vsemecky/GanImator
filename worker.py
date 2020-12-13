@@ -123,6 +123,7 @@ class BackgroundWorker(object):
 
         # Preload neurals (force ganimator to load pkl and store in memory cache)
         generate_image(pkl=self.project.pkl)
+        self.generate_missing_videos()
 
         # Background loop
         while True:

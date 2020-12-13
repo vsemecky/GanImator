@@ -385,12 +385,12 @@ var app = (function () {
     			attr_dev(img, "class", "img-fluid");
     			if (img.src !== (img_src_value = /*image*/ ctx[9].url)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "title", img_title_value = /*image*/ ctx[9].seed);
-    			add_location(img, file, 95, 3, 2358);
+    			add_location(img, file, 95, 3, 2371);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-sm btn-outline-light");
-    			add_location(button, file, 96, 3, 2452);
+    			add_location(button, file, 96, 3, 2465);
     			attr_dev(div, "class", "thumb");
-    			add_location(div, file, 94, 2, 2334);
+    			add_location(div, file, 94, 2, 2347);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -492,17 +492,18 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "+ Add random seed";
     			attr_dev(video, "id", "player");
-    			attr_dev(video, "width", "480");
+    			attr_dev(video, "width", "576");
+    			attr_dev(video, "height", "960");
     			add_location(video, file, 90, 2, 2218);
     			attr_dev(section, "class", "col-9");
     			add_location(section, file, 89, 1, 2192);
-    			add_location(br, file, 99, 2, 2583);
+    			add_location(br, file, 99, 2, 2596);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-outline-light");
-    			add_location(button, file, 100, 2, 2592);
+    			add_location(button, file, 100, 2, 2605);
     			attr_dev(aside, "id", "sidebar");
     			attr_dev(aside, "class", "col-3");
-    			add_location(aside, file, 92, 1, 2271);
+    			add_location(aside, file, 92, 1, 2284);
     			attr_dev(div, "class", "row");
     			add_location(div, file, 88, 0, 2173);
     		},
