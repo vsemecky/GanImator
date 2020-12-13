@@ -50,10 +50,14 @@
 	 * @param image
 	 */
 	function seedOnClick(image) {
+		// Skip if seed is the same
+		if (image.seed == current_image.seed) {
+			return false;
+		}
 		console.log("seedOnClick:", image);
 		let video_url = '/project/video/' + current_image.seed + "-" + image.seed + ".mp4";
-		player.load();
 		player.src = video_url;
+		player.load();
 		player.onloadeddata = function() {
 			player.play();
 		}

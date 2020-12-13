@@ -364,7 +364,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (94:2) {#each images as image}
+    // (98:2) {#each images as image}
     function create_each_block(ctx) {
     	let div;
     	let img;
@@ -385,12 +385,12 @@ var app = (function () {
     			attr_dev(img, "class", "img-fluid");
     			if (img.src !== (img_src_value = /*image*/ ctx[9].url)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "title", img_title_value = /*image*/ ctx[9].seed);
-    			add_location(img, file, 95, 3, 2371);
+    			add_location(img, file, 99, 3, 2464);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-sm btn-outline-light");
-    			add_location(button, file, 96, 3, 2465);
+    			add_location(button, file, 100, 3, 2558);
     			attr_dev(div, "class", "thumb");
-    			add_location(div, file, 94, 2, 2347);
+    			add_location(div, file, 98, 2, 2440);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -447,7 +447,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(94:2) {#each images as image}",
+    		source: "(98:2) {#each images as image}",
     		ctx
     	});
 
@@ -494,18 +494,18 @@ var app = (function () {
     			attr_dev(video, "id", "player");
     			attr_dev(video, "width", "576");
     			attr_dev(video, "height", "960");
-    			add_location(video, file, 90, 2, 2218);
+    			add_location(video, file, 94, 2, 2311);
     			attr_dev(section, "class", "col-9");
-    			add_location(section, file, 89, 1, 2192);
-    			add_location(br, file, 99, 2, 2596);
+    			add_location(section, file, 93, 1, 2285);
+    			add_location(br, file, 103, 2, 2689);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-outline-light");
-    			add_location(button, file, 100, 2, 2605);
+    			add_location(button, file, 104, 2, 2698);
     			attr_dev(aside, "id", "sidebar");
     			attr_dev(aside, "class", "col-3");
-    			add_location(aside, file, 92, 1, 2284);
+    			add_location(aside, file, 96, 1, 2377);
     			attr_dev(div, "class", "row");
-    			add_location(div, file, 88, 0, 2173);
+    			add_location(div, file, 92, 0, 2266);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -625,10 +625,15 @@ var app = (function () {
      * @param image
      */
     	function seedOnClick(image) {
+    		// Skip if seed is the same
+    		if (image.seed == current_image.seed) {
+    			return false;
+    		}
+
     		console.log("seedOnClick:", image);
     		let video_url = "/project/video/" + current_image.seed + "-" + image.seed + ".mp4";
-    		player.load();
     		player.src = video_url;
+    		player.load();
 
     		player.onloadeddata = function () {
     			player.play();
