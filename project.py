@@ -20,9 +20,10 @@ class Project:
     def __init__(self, data_dir):
         # Folders
         self.data_dir = data_dir
-        self.image_dir = data_dir + "/seeds"
+        self.image_dir = data_dir + "/image"
         self.video_dir = data_dir + "/video"
         os.makedirs(self.image_dir, exist_ok=True)
+        os.makedirs(self.video_dir, exist_ok=True)
 
         # JSON database
         self.db = TinyDB(data_dir + '/project.json', sort_keys=False, indent=4, separators=(',', ': '))
