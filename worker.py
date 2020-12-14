@@ -98,6 +98,7 @@ class BackgroundWorker(object):
                     # Skip if video already exists
                     if os.path.isfile(filename):
                         print("Generating video", image1['seed'], "=>", image2['seed'], colored("EXIST", 'yellow'))
+                        continue
 
                     print("Generating video", image1['seed'], "=>", image2['seed'])
                     clip = latent_interpolation_clip(
