@@ -360,11 +360,11 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[9] = list[i];
+    	child_ctx[10] = list[i];
     	return child_ctx;
     }
 
-    // (98:2) {#each images as image}
+    // (121:2) {#each images as image}
     function create_each_block(ctx) {
     	let div;
     	let img;
@@ -383,14 +383,14 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "X";
     			attr_dev(img, "class", "img-fluid");
-    			if (img.src !== (img_src_value = /*image*/ ctx[9].url)) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "title", img_title_value = /*image*/ ctx[9].seed);
-    			add_location(img, file, 99, 3, 2464);
+    			if (img.src !== (img_src_value = /*image*/ ctx[10].url)) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "title", img_title_value = /*image*/ ctx[10].seed);
+    			add_location(img, file, 122, 3, 3064);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-sm btn-outline-light");
-    			add_location(button, file, 100, 3, 2558);
+    			add_location(button, file, 123, 3, 3158);
     			attr_dev(div, "class", "thumb");
-    			add_location(div, file, 98, 2, 2440);
+    			add_location(div, file, 121, 2, 3040);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -404,7 +404,7 @@ var app = (function () {
     						img,
     						"click",
     						function () {
-    							if (is_function(/*seedOnClick*/ ctx[1](/*image*/ ctx[9]))) /*seedOnClick*/ ctx[1](/*image*/ ctx[9]).apply(this, arguments);
+    							if (is_function(/*seedOnClick*/ ctx[1](/*image*/ ctx[10]))) /*seedOnClick*/ ctx[1](/*image*/ ctx[10]).apply(this, arguments);
     						},
     						false,
     						false,
@@ -414,7 +414,7 @@ var app = (function () {
     						button,
     						"click",
     						function () {
-    							if (is_function(/*removeImageClick*/ ctx[3](/*image*/ ctx[9].seed))) /*removeImageClick*/ ctx[3](/*image*/ ctx[9].seed).apply(this, arguments);
+    							if (is_function(/*removeImageClick*/ ctx[3](/*image*/ ctx[10].seed))) /*removeImageClick*/ ctx[3](/*image*/ ctx[10].seed).apply(this, arguments);
     						},
     						false,
     						false,
@@ -428,11 +428,11 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*images*/ 1 && img.src !== (img_src_value = /*image*/ ctx[9].url)) {
+    			if (dirty & /*images*/ 1 && img.src !== (img_src_value = /*image*/ ctx[10].url)) {
     				attr_dev(img, "src", img_src_value);
     			}
 
-    			if (dirty & /*images*/ 1 && img_title_value !== (img_title_value = /*image*/ ctx[9].seed)) {
+    			if (dirty & /*images*/ 1 && img_title_value !== (img_title_value = /*image*/ ctx[10].seed)) {
     				attr_dev(img, "title", img_title_value);
     			}
     		},
@@ -447,7 +447,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(98:2) {#each images as image}",
+    		source: "(121:2) {#each images as image}",
     		ctx
     	});
 
@@ -459,10 +459,12 @@ var app = (function () {
     	let section;
     	let video;
     	let t0;
-    	let aside;
+    	let canvas_1;
     	let t1;
-    	let br;
+    	let aside;
     	let t2;
+    	let br;
+    	let t3;
     	let button;
     	let mounted;
     	let dispose;
@@ -480,32 +482,39 @@ var app = (function () {
     			section = element("section");
     			video = element("video");
     			t0 = space();
+    			canvas_1 = element("canvas");
+    			t1 = space();
     			aside = element("aside");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t1 = space();
-    			br = element("br");
     			t2 = space();
+    			br = element("br");
+    			t3 = space();
     			button = element("button");
     			button.textContent = "+ Add random seed";
     			attr_dev(video, "id", "player");
-    			attr_dev(video, "width", "576");
-    			attr_dev(video, "height", "960");
-    			add_location(video, file, 94, 2, 2311);
+    			attr_dev(video, "width", "3");
+    			attr_dev(video, "height", "5");
+    			attr_dev(video, "class", "svelte-dpwlo2");
+    			add_location(video, file, 116, 2, 2858);
+    			attr_dev(canvas_1, "id", "canvas");
+    			attr_dev(canvas_1, "width", "576");
+    			attr_dev(canvas_1, "height", "960");
+    			add_location(canvas_1, file, 117, 2, 2909);
     			attr_dev(section, "class", "col-9");
-    			add_location(section, file, 93, 1, 2285);
-    			add_location(br, file, 103, 2, 2689);
+    			add_location(section, file, 115, 1, 2832);
+    			add_location(br, file, 126, 2, 3289);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-outline-light");
-    			add_location(button, file, 104, 2, 2698);
+    			add_location(button, file, 127, 2, 3298);
     			attr_dev(aside, "id", "sidebar");
     			attr_dev(aside, "class", "col-3");
-    			add_location(aside, file, 96, 1, 2377);
+    			add_location(aside, file, 119, 1, 2977);
     			attr_dev(div, "class", "row");
-    			add_location(div, file, 92, 0, 2266);
+    			add_location(div, file, 114, 0, 2813);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -514,16 +523,18 @@ var app = (function () {
     			insert_dev(target, div, anchor);
     			append_dev(div, section);
     			append_dev(section, video);
-    			append_dev(div, t0);
+    			append_dev(section, t0);
+    			append_dev(section, canvas_1);
+    			append_dev(div, t1);
     			append_dev(div, aside);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(aside, null);
     			}
 
-    			append_dev(aside, t1);
-    			append_dev(aside, br);
     			append_dev(aside, t2);
+    			append_dev(aside, br);
+    			append_dev(aside, t3);
     			append_dev(aside, button);
 
     			if (!mounted) {
@@ -545,7 +556,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(aside, t1);
+    						each_blocks[i].m(aside, t2);
     					}
     				}
 
@@ -583,8 +594,13 @@ var app = (function () {
     	let { name } = $$props;
     	let images = [];
     	let current_image = { seed: 0, url: "" };
-    	let current_video = "";
+
+    	// let current_video = "";
+    	// Elements
     	let player;
+
+    	let canvas;
+    	let context;
 
     	/**
      * Fetch Project data
@@ -596,8 +612,26 @@ var app = (function () {
     		$$invalidate(0, images = project.images);
     		console.log("Images", project.images);
     		current_image = images[0];
-    		current_video = "/project/video/" + images[0].seed + "-" + images[1].seed + ".mp4";
+
+    		// current_video = '/project/video/' + images[0].seed + "-" + images[1].seed + ".mp4";
     		player = document.getElementById("player");
+
+    		canvas = document.getElementById("canvas");
+    		context = canvas.getContext("2d");
+    		context.scale(0.5, 0.5);
+
+    		player.addEventListener(
+    			"play",
+    			function () {
+    				(function loop() {
+    					if (!player.paused && !player.ended) {
+    						context.drawImage(player, 0, 0);
+    						setTimeout(loop, 1000 / 30); // drawing at 30fps
+    					}
+    				})();
+    			},
+    			0
+    		);
     	});
 
     	function fetchVideoAndPlay() {
@@ -630,6 +664,7 @@ var app = (function () {
     			return false;
     		}
 
+    		document.body.style.cursor = "progress";
     		console.log("seedOnClick:", image);
     		let video_url = "/project/video/" + current_image.seed + "-" + image.seed + ".mp4";
     		player.src = video_url;
@@ -637,6 +672,7 @@ var app = (function () {
 
     		player.onloadeddata = function () {
     			player.play();
+    			document.body.style.cursor = "default";
     		};
 
     		current_image = image;
@@ -679,8 +715,9 @@ var app = (function () {
     		name,
     		images,
     		current_image,
-    		current_video,
     		player,
+    		canvas,
+    		context,
     		fetchVideoAndPlay,
     		seedOnClick,
     		addImageClick,
@@ -691,8 +728,9 @@ var app = (function () {
     		if ("name" in $$props) $$invalidate(4, name = $$props.name);
     		if ("images" in $$props) $$invalidate(0, images = $$props.images);
     		if ("current_image" in $$props) current_image = $$props.current_image;
-    		if ("current_video" in $$props) current_video = $$props.current_video;
     		if ("player" in $$props) player = $$props.player;
+    		if ("canvas" in $$props) canvas = $$props.canvas;
+    		if ("context" in $$props) context = $$props.context;
     	};
 
     	if ($$props && "$$inject" in $$props) {

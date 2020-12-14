@@ -7,8 +7,12 @@
 		seed: 0,
 		url: "",
 	};
-	let current_video = "";
+	// let current_video = "";
+
+	// Elements
 	let player;
+	let canvas;
+	let context;
 
 	/**
 	 * Fetch Project data
@@ -20,8 +24,20 @@
 		images = project.images;
 		console.log("Images", project.images);
 		current_image = images[0];
-		current_video = '/project/video/' + images[0].seed + "-" + images[1].seed + ".mp4";
+		// current_video = '/project/video/' + images[0].seed + "-" + images[1].seed + ".mp4";
 		player = document.getElementById("player");
+		canvas = document.getElementById('canvas');
+		context = canvas.getContext('2d');
+		context.scale(0.5, 0.5);
+
+		player.addEventListener('play', function() {
+			(function loop() {
+				if (!player.paused && !player.ended) {
+					context.drawImage(player, 0, 0);
+					setTimeout(loop, 1000 / 30); // drawing at 30fps
+				}
+			})();
+		}, 0);
 	});
 
 	function fetchVideoAndPlay() {
@@ -54,12 +70,14 @@
 		if (image.seed == current_image.seed) {
 			return false;
 		}
+		document.body.style.cursor = "progress";
 		console.log("seedOnClick:", image);
 		let video_url = '/project/video/' + current_image.seed + "-" + image.seed + ".mp4";
 		player.src = video_url;
 		player.load();
 		player.onloadeddata = function() {
 			player.play();
+			document.body.style.cursor = "default";
 		}
 		current_image = image;
 		// fetchVideoAndPlay();
@@ -87,12 +105,17 @@
 </script>
 
 <style>
-
+	/* Hide video element*/
+	video {
+		visibility: hidden;
+		display: none;
+	}
 </style>
 
 <div class="row">
 	<section class="col-9">
-		<video id="player" width="576" height="960"></video>
+		<video id="player" width="3" height="5"></video>
+		<canvas id="canvas" width="576" height="960"></canvas>
 	</section>
 	<aside id="sidebar" class="col-3">
 		{#each images as image}
