@@ -36,7 +36,7 @@ class BackgroundWorker(object):
         self.project = project
         self.images = project.images
         self.psi = 0.7
-        self.duration = 2  # Duration of interpolation videos [seconds]
+        self.duration = 1  # Duration of interpolation videos [seconds]
         thread = Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
