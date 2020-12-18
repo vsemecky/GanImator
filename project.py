@@ -1,8 +1,4 @@
 import glob
-import os
-from pprint import pprint
-
-from termcolor import colored
 from tinydb import TinyDB, Query
 try:
     import google.colab  # Check Colab
@@ -40,4 +36,3 @@ class Project:
             exit()
         print("Network (PKL):", pkls[0], "\n")
         return pkls[0]
-

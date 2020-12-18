@@ -1,13 +1,8 @@
 import argparse
-import os
-from pprint import pprint
-from threading import Thread
 import time
 from flask import Blueprint, Flask, render_template, redirect, url_for, abort, send_from_directory, jsonify
 from flask_ngrok import run_with_ngrok
-from termcolor import colored
 from tinydb import Query
-
 import project
 from worker import BackgroundWorker
 
