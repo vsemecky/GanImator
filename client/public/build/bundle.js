@@ -360,11 +360,11 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[10] = list[i];
+    	child_ctx[11] = list[i];
     	return child_ctx;
     }
 
-    // (121:2) {#each images as image}
+    // (130:2) {#each images as image}
     function create_each_block(ctx) {
     	let div;
     	let img;
@@ -383,14 +383,14 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "X";
     			attr_dev(img, "class", "img-fluid");
-    			if (img.src !== (img_src_value = /*image*/ ctx[10].url)) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "title", img_title_value = /*image*/ ctx[10].seed);
-    			add_location(img, file, 122, 3, 3064);
+    			if (img.src !== (img_src_value = /*image*/ ctx[11].url)) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "title", img_title_value = /*image*/ ctx[11].seed);
+    			add_location(img, file, 131, 3, 3188);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-sm btn-outline-light");
-    			add_location(button, file, 123, 3, 3158);
+    			add_location(button, file, 132, 3, 3282);
     			attr_dev(div, "class", "thumb");
-    			add_location(div, file, 121, 2, 3040);
+    			add_location(div, file, 130, 2, 3164);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -404,7 +404,7 @@ var app = (function () {
     						img,
     						"click",
     						function () {
-    							if (is_function(/*seedOnClick*/ ctx[1](/*image*/ ctx[10]))) /*seedOnClick*/ ctx[1](/*image*/ ctx[10]).apply(this, arguments);
+    							if (is_function(/*seedOnClick*/ ctx[1](/*image*/ ctx[11]))) /*seedOnClick*/ ctx[1](/*image*/ ctx[11]).apply(this, arguments);
     						},
     						false,
     						false,
@@ -414,7 +414,7 @@ var app = (function () {
     						button,
     						"click",
     						function () {
-    							if (is_function(/*removeImageClick*/ ctx[3](/*image*/ ctx[10].seed))) /*removeImageClick*/ ctx[3](/*image*/ ctx[10].seed).apply(this, arguments);
+    							if (is_function(/*removeImageClick*/ ctx[3](/*image*/ ctx[11].seed))) /*removeImageClick*/ ctx[3](/*image*/ ctx[11].seed).apply(this, arguments);
     						},
     						false,
     						false,
@@ -428,11 +428,11 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*images*/ 1 && img.src !== (img_src_value = /*image*/ ctx[10].url)) {
+    			if (dirty & /*images*/ 1 && img.src !== (img_src_value = /*image*/ ctx[11].url)) {
     				attr_dev(img, "src", img_src_value);
     			}
 
-    			if (dirty & /*images*/ 1 && img_title_value !== (img_title_value = /*image*/ ctx[10].seed)) {
+    			if (dirty & /*images*/ 1 && img_title_value !== (img_title_value = /*image*/ ctx[11].seed)) {
     				attr_dev(img, "title", img_title_value);
     			}
     		},
@@ -447,7 +447,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(121:2) {#each images as image}",
+    		source: "(130:2) {#each images as image}",
     		ctx
     	});
 
@@ -465,7 +465,9 @@ var app = (function () {
     	let t2;
     	let br;
     	let t3;
-    	let button;
+    	let button0;
+    	let t5;
+    	let button1;
     	let mounted;
     	let dispose;
     	let each_value = /*images*/ ctx[0];
@@ -493,28 +495,34 @@ var app = (function () {
     			t2 = space();
     			br = element("br");
     			t3 = space();
-    			button = element("button");
-    			button.textContent = "+ Add random seed";
+    			button0 = element("button");
+    			button0.textContent = "+ Add random seed";
+    			t5 = space();
+    			button1 = element("button");
+    			button1.textContent = "Preload";
     			attr_dev(video, "id", "player");
     			attr_dev(video, "width", "3");
     			attr_dev(video, "height", "5");
     			attr_dev(video, "class", "svelte-dpwlo2");
-    			add_location(video, file, 116, 2, 2858);
+    			add_location(video, file, 125, 2, 2982);
     			attr_dev(canvas_1, "id", "canvas");
     			attr_dev(canvas_1, "width", "576");
     			attr_dev(canvas_1, "height", "960");
-    			add_location(canvas_1, file, 117, 2, 2909);
+    			add_location(canvas_1, file, 126, 2, 3033);
     			attr_dev(section, "class", "col-9");
-    			add_location(section, file, 115, 1, 2832);
-    			add_location(br, file, 126, 2, 3289);
-    			attr_dev(button, "type", "button");
-    			attr_dev(button, "class", "btn btn-outline-light");
-    			add_location(button, file, 127, 2, 3298);
+    			add_location(section, file, 124, 1, 2956);
+    			add_location(br, file, 135, 2, 3413);
+    			attr_dev(button0, "type", "button");
+    			attr_dev(button0, "class", "btn btn-outline-light");
+    			add_location(button0, file, 136, 2, 3422);
+    			attr_dev(button1, "type", "button");
+    			attr_dev(button1, "class", "btn btn-outline-light");
+    			add_location(button1, file, 137, 2, 3528);
     			attr_dev(aside, "id", "sidebar");
     			attr_dev(aside, "class", "col-3");
-    			add_location(aside, file, 119, 1, 2977);
+    			add_location(aside, file, 128, 1, 3101);
     			attr_dev(div, "class", "row");
-    			add_location(div, file, 114, 0, 2813);
+    			add_location(div, file, 123, 0, 2937);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -535,10 +543,16 @@ var app = (function () {
     			append_dev(aside, t2);
     			append_dev(aside, br);
     			append_dev(aside, t3);
-    			append_dev(aside, button);
+    			append_dev(aside, button0);
+    			append_dev(aside, t5);
+    			append_dev(aside, button1);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*addImageClick*/ ctx[2], false, false, false);
+    				dispose = [
+    					listen_dev(button0, "click", /*addImageClick*/ ctx[2], false, false, false),
+    					listen_dev(button1, "click", /*preloadVideos*/ ctx[4], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
@@ -573,7 +587,7 @@ var app = (function () {
     			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -586,6 +600,14 @@ var app = (function () {
     	});
 
     	return block;
+    }
+
+    function getVideoUrl(seed1, seed2) {
+    	return "/project/video/" + seed1 + "-" + seed2 + ".mp4";
+    }
+
+    function sleep(ms) {
+    	return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     function instance($$self, $$props, $$invalidate) {
@@ -634,26 +656,6 @@ var app = (function () {
     		);
     	});
 
-    	function fetchVideoAndPlay() {
-    		const url = "/project/video/639-1.mp4";
-
-    		fetch(url).then(response => response.blob()).then(blob => {
-    			console.log("fetchVideoAndPlay:", url);
-    			console.log("#player", player);
-    			console.log("blob", blob);
-
-    			player.onloadeddata = function () {
-    				player.srcObject = blob;
-    			};
-
-    			return player.play();
-    		}).then(_ => {
-    			console.log("fetchVideoAndPlay:", "Video playback started ;)");
-    		}).catch(e => {
-    			console.log("fetchVideoAndPlay:", "Video playback failed ;(", e);
-    		});
-    	}
-
     	/**
      * User clicked on the image => Set the new current image.
      * @param image
@@ -666,8 +668,7 @@ var app = (function () {
 
     		document.body.style.cursor = "progress";
     		console.log("seedOnClick:", image);
-    		let video_url = "/project/video/" + current_image.seed + "-" + image.seed + ".mp4";
-    		player.src = video_url;
+    		player.src = getVideoUrl(current_image.seed, image.seed);
     		player.load();
 
     		player.onloadeddata = function () {
@@ -676,7 +677,8 @@ var app = (function () {
     		};
 
     		current_image = image;
-    	} // fetchVideoAndPlay();
+    		preloadSeedVideos(current_image.seed);
+    	}
 
     	async function addImageClick() {
     		console.log("addImageClick()");
@@ -700,6 +702,31 @@ var app = (function () {
     		}
     	}
 
+    	async function preloadVideos() {
+    		console.log("preloadVideos()", images);
+    		var image1;
+    		var image2;
+
+    		for (image1 of images) {
+    			for (image2 of images) {
+    				console.log(image1.seed, image2.seed);
+    				const res = await fetch(getVideoUrl(image1.seed, image2.seed));
+    			}
+    		}
+    	}
+
+    	async function preloadSeedVideos(seed) {
+    		console.log("preloadSeedVideos()", seed);
+    		await sleep(1500);
+    		var image;
+
+    		for (image of images) {
+    			if (seed != image.seed) {
+    				const res = fetch(getVideoUrl(seed, image.seed));
+    			}
+    		}
+    	}
+
     	const writable_props = ["name"];
 
     	Object.keys($$props).forEach(key => {
@@ -707,7 +734,7 @@ var app = (function () {
     	});
 
     	$$self.$$set = $$props => {
-    		if ("name" in $$props) $$invalidate(4, name = $$props.name);
+    		if ("name" in $$props) $$invalidate(5, name = $$props.name);
     	};
 
     	$$self.$capture_state = () => ({
@@ -718,14 +745,17 @@ var app = (function () {
     		player,
     		canvas,
     		context,
-    		fetchVideoAndPlay,
+    		getVideoUrl,
+    		sleep,
     		seedOnClick,
     		addImageClick,
-    		removeImageClick
+    		removeImageClick,
+    		preloadVideos,
+    		preloadSeedVideos
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("name" in $$props) $$invalidate(4, name = $$props.name);
+    		if ("name" in $$props) $$invalidate(5, name = $$props.name);
     		if ("images" in $$props) $$invalidate(0, images = $$props.images);
     		if ("current_image" in $$props) current_image = $$props.current_image;
     		if ("player" in $$props) player = $$props.player;
@@ -737,13 +767,13 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [images, seedOnClick, addImageClick, removeImageClick, name];
+    	return [images, seedOnClick, addImageClick, removeImageClick, preloadVideos, name];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { name: 4 });
+    		init(this, options, instance, create_fragment, safe_not_equal, { name: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -755,7 +785,7 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*name*/ ctx[4] === undefined && !("name" in props)) {
+    		if (/*name*/ ctx[5] === undefined && !("name" in props)) {
     			console_1.warn("<App> was created without expected prop 'name'");
     		}
     	}

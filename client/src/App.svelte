@@ -40,25 +40,12 @@
 		}, 0);
 	});
 
-	function fetchVideoAndPlay() {
-		const url = '/project/video/639-1.mp4';
-		fetch(url)
-			.then(response => response.blob())
-			.then(blob => {
-				console.log("fetchVideoAndPlay:", url);
-				console.log("#player", player);
-				console.log("blob", blob);
-				player.onloadeddata = function() {
-					player.srcObject = blob;
-				}
-				return player.play();
-			})
-			.then(_ => {
-				console.log("fetchVideoAndPlay:", "Video playback started ;)");
-			})
-			.catch(e => {
-				console.log("fetchVideoAndPlay:", "Video playback failed ;(", e);
-			})
+	function getVideoUrl(seed1, seed2) {
+		return '/project/video/' + seed1 + "-" + seed2 + ".mp4";
+	}
+
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
 	/**
@@ -72,15 +59,14 @@
 		}
 		document.body.style.cursor = "progress";
 		console.log("seedOnClick:", image);
-		let video_url = '/project/video/' + current_image.seed + "-" + image.seed + ".mp4";
-		player.src = video_url;
+		player.src = getVideoUrl(current_image.seed, image.seed);
 		player.load();
 		player.onloadeddata = function() {
 			player.play();
 			document.body.style.cursor = "default";
 		}
 		current_image = image;
-		// fetchVideoAndPlay();
+		preloadSeedVideos(current_image.seed);
 	}
 
 	async function addImageClick() {
@@ -100,6 +86,29 @@
 			const res = await fetch("/api/remove-image/" + seed);
 			let project = await res.json();
 			images = project.images;
+		}
+	}
+
+	async function preloadVideos() {
+		console.log("preloadVideos()", images);
+		var image1;
+		var image2;
+		for (image1 of images) {
+			for (image2 of images) {
+				console.log(image1.seed, image2.seed);
+				const res = await fetch(getVideoUrl(image1.seed, image2.seed));
+			}
+		}
+	}
+
+	async function preloadSeedVideos(seed) {
+		console.log("preloadSeedVideos()", seed);
+		await sleep(1500);
+		var image;
+		for (image of images) {
+			if (seed != image.seed) {
+				const res = fetch(getVideoUrl(seed, image.seed));
+			}
 		}
 	}
 </script>
@@ -126,5 +135,6 @@
 		{/each}
 		<br />
 		<button type="button" class="btn btn-outline-light" on:click={addImageClick}>+ Add random seed</button>
+		<button type="button" class="btn btn-outline-light" on:click={preloadVideos}>Preload</button>
 	</aside>
 </div>

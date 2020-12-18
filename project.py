@@ -1,3 +1,4 @@
+import os
 import glob
 from tinydb import TinyDB, Query
 try:
