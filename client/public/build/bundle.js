@@ -385,12 +385,12 @@ var app = (function () {
     			attr_dev(img, "class", "img-fluid");
     			if (img.src !== (img_src_value = /*image*/ ctx[11].url)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "title", img_title_value = /*image*/ ctx[11].seed);
-    			add_location(img, file, 131, 3, 3188);
+    			add_location(img, file, 131, 3, 3194);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-sm btn-outline-light");
-    			add_location(button, file, 132, 3, 3282);
+    			add_location(button, file, 132, 3, 3288);
     			attr_dev(div, "class", "thumb");
-    			add_location(div, file, 130, 2, 3164);
+    			add_location(div, file, 130, 2, 3170);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -504,25 +504,25 @@ var app = (function () {
     			attr_dev(video, "width", "3");
     			attr_dev(video, "height", "5");
     			attr_dev(video, "class", "svelte-dpwlo2");
-    			add_location(video, file, 125, 2, 2982);
+    			add_location(video, file, 125, 2, 2988);
     			attr_dev(canvas_1, "id", "canvas");
     			attr_dev(canvas_1, "width", "576");
     			attr_dev(canvas_1, "height", "960");
-    			add_location(canvas_1, file, 126, 2, 3033);
+    			add_location(canvas_1, file, 126, 2, 3039);
     			attr_dev(section, "class", "col-9");
-    			add_location(section, file, 124, 1, 2956);
-    			add_location(br, file, 135, 2, 3413);
+    			add_location(section, file, 124, 1, 2962);
+    			add_location(br, file, 135, 2, 3419);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "btn btn-outline-light");
-    			add_location(button0, file, 136, 2, 3422);
+    			add_location(button0, file, 136, 2, 3428);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "btn btn-outline-light");
-    			add_location(button1, file, 137, 2, 3528);
+    			add_location(button1, file, 137, 2, 3534);
     			attr_dev(aside, "id", "sidebar");
     			attr_dev(aside, "class", "col-3");
-    			add_location(aside, file, 128, 1, 3101);
+    			add_location(aside, file, 128, 1, 3107);
     			attr_dev(div, "class", "row");
-    			add_location(div, file, 123, 0, 2937);
+    			add_location(div, file, 123, 0, 2943);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -722,7 +722,7 @@ var app = (function () {
 
     		for (image of images) {
     			if (seed != image.seed) {
-    				const res = fetch(getVideoUrl(seed, image.seed));
+    				const res = await fetch(getVideoUrl(seed, image.seed));
     			}
     		}
     	}

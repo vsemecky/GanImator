@@ -59,11 +59,10 @@ class BackgroundWorker(object):
         try:
             filename = self.get_seed_filename(seed)
             if os.path.isfile(filename):
-                print("generate_image", seed, colored("EXIST", 'yellow'), filename)
-            else:
-                image_pil = generate_image(pkl=self.project.pkl, seed=int(seed), psi=self.project.psi)
-                image_pil.save(filename)
-                print("generate_image", seed, colored("OK", 'green'), filename)
+                return
+            image_pil = generate_image(pkl=self.project.pkl, seed=int(seed), psi=self.project.psi)
+            image_pil.save(filename)
+            print("generate_image", seed, colored("OK", 'green'), filename)
             self.images.update({'ready': True}, Query().seed == seed)
         except Exception as e:
             print("generate_image", seed, colored("ERROR", 'red'), e)
@@ -75,7 +74,7 @@ class BackgroundWorker(object):
             try:
                 filename = self.get_seed_filename(image['seed'])
                 if os.path.isfile(filename):
-                    print("Generating image", image['seed'], colored("EXIST", 'yellow'), filename)
+                    continue
                 else:
                     image_pil = generate_image(pkl=self.project.pkl, seed=int(image['seed']), psi=self.project.psi)
                     image_pil.save(filename)
@@ -92,12 +91,10 @@ class BackgroundWorker(object):
                 try:
                     # Skip interpolation between identical seeds
                     if image1['seed'] == image2['seed']:
-                        print("Generating video", image1['seed'], "=>", image2['seed'], colored("SKIP selfie", 'yellow'))
                         continue
                     filename = self.get_interpolation_filename(image1['seed'], image2['seed'])
                     # Skip if video already exists
                     if os.path.isfile(filename):
-                        print("Generating video", image1['seed'], "=>", image2['seed'], colored("EXIST", 'yellow'))
                         continue
 
                     print("Generating video", image1['seed'], "=>", image2['seed'])

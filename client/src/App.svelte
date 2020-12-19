@@ -107,7 +107,7 @@
 		var image;
 		for (image of images) {
 			if (seed != image.seed) {
-				const res = fetch(getVideoUrl(seed, image.seed));
+				const res = await fetch(getVideoUrl(seed, image.seed));
 			}
 		}
 	}
