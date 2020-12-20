@@ -75,7 +75,7 @@ def add_image(seed):
     project.images.insert({
         'seed': int(seed)
     })
-    worker.que.append({'action': 'generate_all', 'seed': seed})
+    worker.que.append({'action': 'generate_all'})
     time.sleep(2)  # Wait 3 seconds if image is already made.
     return get_project()
 
@@ -83,6 +83,7 @@ def add_image(seed):
 @app.route("/api/remove-image/<int:seed>")
 def remove_image(seed: int):
     project.images.remove(Query().seed == seed)
+    worker.que.append({'action': 'generate_all'})
     return get_project()
 
 
