@@ -32,12 +32,19 @@
 
 		player.addEventListener('play', function() {
 			(function loop() {
-				if (!player.paused && !player.ended) {
-					context.drawImage(player, 0, 0);
+				context.drawImage(player, 0, 0);
+				if (!player.ended && !player.paused) {
 					setTimeout(loop, 1000 / 30); // drawing at 30fps
 				}
 			})();
 		}, 0);
+
+		// Show first video
+		player.src = getVideoUrl(images[1].seed, current_image.seed);
+		player.autoplay = true;
+		player.muted = true;
+		player.load();
+
 	});
 
 	function getVideoUrl(seed1, seed2) {
@@ -130,16 +137,21 @@
 
 <style>
 	/* Hide video element*/
-	video {
-		visibility: hidden;
-		display: none;
+	video#player {
+		/*visibility: hidden;*/
+		/*display: none;*/
+		padding: 0;
 	}
 </style>
 
 <div class="row">
 	<section class="col-9">
-		<video id="player" width="3" height="5"></video>
-		<canvas id="canvas" width="576" height="960"></canvas>
+<!--		<video id="player" width="288" height="480"></video>-->
+		<video id="player" width="384" height="640"></video>
+		<canvas id="canvas" width="384" height="640"></canvas>
+<!--		<img id="image" width="384" height="640" src={current_image.url}/>-->
+<!--		<canvas id="canvas" width="576" height="960"></canvas>-->
+
 	</section>
 	<aside id="sidebar" class="col-3">
 		{#each images as image}
