@@ -65,6 +65,9 @@ var app = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
+    function toggle_class(element, name, toggle) {
+        element.classList[toggle ? 'add' : 'remove'](name);
+    }
     function custom_event(type, detail) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, false, false, detail);
@@ -364,14 +367,14 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (156:2) {#each images as image}
+    // (198:2) {#each images as image}
     function create_each_block(ctx) {
     	let div;
     	let img;
     	let img_src_value;
     	let img_title_value;
-    	let t0;
-    	let button;
+    	let img_alt_value;
+    	let t;
     	let mounted;
     	let dispose;
 
@@ -379,48 +382,32 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			img = element("img");
-    			t0 = space();
-    			button = element("button");
-    			button.textContent = "X";
-    			attr_dev(img, "class", "img-fluid");
+    			t = space();
+    			attr_dev(img, "class", "img-fluid svelte-13gbjj7");
     			if (img.src !== (img_src_value = /*image*/ ctx[10].url)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "title", img_title_value = /*image*/ ctx[10].seed);
-    			add_location(img, file, 157, 4, 3954);
-    			attr_dev(button, "type", "button");
-    			attr_dev(button, "class", "btn btn-sm btn-outline-light");
-    			add_location(button, file, 158, 4, 4049);
-    			attr_dev(div, "class", "thumb");
-    			add_location(div, file, 156, 3, 3929);
+    			attr_dev(img, "alt", img_alt_value = /*image*/ ctx[10].seed);
+    			toggle_class(img, "active", /*current_image*/ ctx[1].seed === /*image*/ ctx[10].seed);
+    			add_location(img, file, 199, 3, 5046);
+    			attr_dev(div, "class", "thumb svelte-13gbjj7");
+    			add_location(div, file, 198, 2, 5023);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
-    			append_dev(div, t0);
-    			append_dev(div, button);
+    			append_dev(div, t);
 
     			if (!mounted) {
-    				dispose = [
-    					listen_dev(
-    						img,
-    						"click",
-    						function () {
-    							if (is_function(/*seedOnClick*/ ctx[1](/*image*/ ctx[10]))) /*seedOnClick*/ ctx[1](/*image*/ ctx[10]).apply(this, arguments);
-    						},
-    						false,
-    						false,
-    						false
-    					),
-    					listen_dev(
-    						button,
-    						"click",
-    						function () {
-    							if (is_function(/*removeImageClick*/ ctx[3](/*image*/ ctx[10].seed))) /*removeImageClick*/ ctx[3](/*image*/ ctx[10].seed).apply(this, arguments);
-    						},
-    						false,
-    						false,
-    						false
-    					)
-    				];
+    				dispose = listen_dev(
+    					img,
+    					"click",
+    					function () {
+    						if (is_function(/*seedOnClick*/ ctx[2](/*image*/ ctx[10]))) /*seedOnClick*/ ctx[2](/*image*/ ctx[10]).apply(this, arguments);
+    					},
+    					false,
+    					false,
+    					false
+    				);
 
     				mounted = true;
     			}
@@ -435,11 +422,19 @@ var app = (function () {
     			if (dirty & /*images*/ 1 && img_title_value !== (img_title_value = /*image*/ ctx[10].seed)) {
     				attr_dev(img, "title", img_title_value);
     			}
+
+    			if (dirty & /*images*/ 1 && img_alt_value !== (img_alt_value = /*image*/ ctx[10].seed)) {
+    				attr_dev(img, "alt", img_alt_value);
+    			}
+
+    			if (dirty & /*current_image, images*/ 3) {
+    				toggle_class(img, "active", /*current_image*/ ctx[1].seed === /*image*/ ctx[10].seed);
+    			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			mounted = false;
-    			run_all(dispose);
+    			dispose();
     		}
     	};
 
@@ -447,7 +442,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(156:2) {#each images as image}",
+    		source: "(198:2) {#each images as image}",
     		ctx
     	});
 
@@ -455,19 +450,27 @@ var app = (function () {
     }
 
     function create_fragment(ctx) {
-    	let div;
+    	let div2;
     	let section;
     	let video;
     	let t0;
     	let canvas_1;
     	let t1;
-    	let aside;
-    	let t2;
     	let br;
-    	let t3;
+    	let t2;
+    	let div0;
     	let button0;
-    	let t5;
+    	let t4;
     	let button1;
+    	let t6;
+    	let aside;
+    	let div1;
+    	let button2;
+    	let t8;
+    	let button3;
+    	let t10;
+    	let hr;
+    	let t11;
     	let mounted;
     	let dispose;
     	let each_value = /*images*/ ctx[0];
@@ -480,84 +483,125 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div = element("div");
+    			div2 = element("div");
     			section = element("section");
     			video = element("video");
     			t0 = space();
     			canvas_1 = element("canvas");
     			t1 = space();
+    			br = element("br");
+    			t2 = space();
+    			div0 = element("div");
+    			button0 = element("button");
+    			button0.textContent = "Delete image";
+    			t4 = space();
+    			button1 = element("button");
+    			button1.textContent = "Add tag";
+    			t6 = space();
     			aside = element("aside");
+    			div1 = element("div");
+    			button2 = element("button");
+    			button2.textContent = "+ Add random seed";
+    			t8 = space();
+    			button3 = element("button");
+    			button3.textContent = "Preload";
+    			t10 = space();
+    			hr = element("hr");
+    			t11 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t2 = space();
-    			br = element("br");
-    			t3 = space();
-    			button0 = element("button");
-    			button0.textContent = "+ Add random seed";
-    			t5 = space();
-    			button1 = element("button");
-    			button1.textContent = "Preload";
     			attr_dev(video, "id", "player");
     			attr_dev(video, "width", "384");
     			attr_dev(video, "height", "640");
-    			attr_dev(video, "class", "svelte-13dyf47");
-    			add_location(video, file, 148, 2, 3597);
+    			attr_dev(video, "class", "svelte-13gbjj7");
+    			add_location(video, file, 180, 2, 4192);
     			attr_dev(canvas_1, "id", "canvas");
     			attr_dev(canvas_1, "width", "384");
     			attr_dev(canvas_1, "height", "640");
-    			add_location(canvas_1, file, 149, 2, 3652);
-    			attr_dev(section, "class", "col-9");
-    			add_location(section, file, 146, 1, 3507);
-    			add_location(br, file, 161, 2, 4181);
+    			attr_dev(canvas_1, "title", "Canvas");
+    			add_location(canvas_1, file, 181, 2, 4247);
+    			add_location(br, file, 184, 2, 4463);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "btn btn-outline-light");
-    			add_location(button0, file, 162, 2, 4190);
+    			add_location(button0, file, 186, 3, 4497);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "btn btn-outline-light");
-    			add_location(button1, file, 163, 2, 4296);
+    			add_location(button1, file, 187, 3, 4622);
+    			attr_dev(div0, "class", "btn-group");
+    			add_location(div0, file, 185, 2, 4470);
+    			attr_dev(section, "class", "col-9");
+    			add_location(section, file, 178, 1, 4102);
+    			attr_dev(button2, "type", "button");
+    			attr_dev(button2, "class", "btn btn-outline-light");
+    			add_location(button2, file, 192, 3, 4777);
+    			attr_dev(button3, "type", "button");
+    			attr_dev(button3, "class", "btn btn-outline-light");
+    			add_location(button3, file, 193, 3, 4884);
+    			attr_dev(div1, "class", "btn-group");
+    			add_location(div1, file, 191, 2, 4750);
+    			add_location(hr, file, 196, 2, 4990);
     			attr_dev(aside, "id", "sidebar");
-    			attr_dev(aside, "class", "col-3");
-    			add_location(aside, file, 154, 1, 3865);
-    			attr_dev(div, "class", "row");
-    			add_location(div, file, 145, 0, 3488);
+    			attr_dev(aside, "class", "col-3 svelte-13gbjj7");
+    			add_location(aside, file, 190, 1, 4713);
+    			attr_dev(div2, "class", "row");
+    			add_location(div2, file, 177, 0, 4083);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, section);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, section);
     			append_dev(section, video);
     			append_dev(section, t0);
     			append_dev(section, canvas_1);
-    			append_dev(div, t1);
-    			append_dev(div, aside);
+    			append_dev(section, t1);
+    			append_dev(section, br);
+    			append_dev(section, t2);
+    			append_dev(section, div0);
+    			append_dev(div0, button0);
+    			append_dev(div0, t4);
+    			append_dev(div0, button1);
+    			append_dev(div2, t6);
+    			append_dev(div2, aside);
+    			append_dev(aside, div1);
+    			append_dev(div1, button2);
+    			append_dev(div1, t8);
+    			append_dev(div1, button3);
+    			append_dev(aside, t10);
+    			append_dev(aside, hr);
+    			append_dev(aside, t11);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(aside, null);
     			}
 
-    			append_dev(aside, t2);
-    			append_dev(aside, br);
-    			append_dev(aside, t3);
-    			append_dev(aside, button0);
-    			append_dev(aside, t5);
-    			append_dev(aside, button1);
-
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*addImageClick*/ ctx[2], false, false, false),
-    					listen_dev(button1, "click", /*preloadVideos*/ ctx[4], false, false, false)
+    					listen_dev(
+    						button0,
+    						"click",
+    						function () {
+    							if (is_function(/*removeImageClick*/ ctx[4](/*current_image*/ ctx[1].seed))) /*removeImageClick*/ ctx[4](/*current_image*/ ctx[1].seed).apply(this, arguments);
+    						},
+    						false,
+    						false,
+    						false
+    					),
+    					listen_dev(button2, "click", /*addImageClick*/ ctx[3], false, false, false),
+    					listen_dev(button3, "click", /*preloadVideos*/ ctx[5], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*removeImageClick, images, seedOnClick*/ 11) {
+    		p: function update(new_ctx, [dirty]) {
+    			ctx = new_ctx;
+
+    			if (dirty & /*images, current_image, seedOnClick*/ 7) {
     				each_value = /*images*/ ctx[0];
     				validate_each_argument(each_value);
     				let i;
@@ -570,7 +614,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(aside, t2);
+    						each_blocks[i].m(aside, null);
     					}
     				}
 
@@ -584,7 +628,7 @@ var app = (function () {
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div2);
     			destroy_each(each_blocks, detaching);
     			mounted = false;
     			run_all(dispose);
@@ -631,7 +675,7 @@ var app = (function () {
     		console.log("Project", project);
     		$$invalidate(0, images = project.images);
     		console.log("Images", images);
-    		current_image = images[0];
+    		$$invalidate(1, current_image = images[0]);
     		player = document.getElementById("player");
     		canvas = document.getElementById("canvas");
     		context = canvas.getContext("2d");
@@ -664,7 +708,7 @@ var app = (function () {
      */
     	function seedOnClick(image) {
     		// Skip if seed is the same
-    		if (image.seed == current_image.seed) {
+    		if (image.seed === current_image.seed) {
     			return false;
     		}
 
@@ -678,7 +722,7 @@ var app = (function () {
     			document.body.style.cursor = "default";
     		};
 
-    		current_image = image;
+    		$$invalidate(1, current_image = image);
     		preloadSeedVideos(current_image.seed);
     	}
 
@@ -729,12 +773,19 @@ var app = (function () {
     		let image;
 
     		for (image of images) {
-    			await sleep(500);
-
     			// Skip interpolation to the same seed
     			if (seed === image.seed) {
     				continue;
     			}
+
+    			// Stop preloading if current_image has been changed
+    			if (seed !== current_image.seed) {
+    				console.log("preloadSeedVideos(", seed, "): STOPPED");
+    				return;
+    			}
+
+    			// Wait a while
+    			await sleep(100);
 
     			// Stop preloading if current_image has been changed
     			if (seed !== current_image.seed) {
@@ -773,7 +824,7 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("images" in $$props) $$invalidate(0, images = $$props.images);
-    		if ("current_image" in $$props) current_image = $$props.current_image;
+    		if ("current_image" in $$props) $$invalidate(1, current_image = $$props.current_image);
     		if ("player" in $$props) player = $$props.player;
     		if ("canvas" in $$props) canvas = $$props.canvas;
     		if ("context" in $$props) context = $$props.context;
@@ -783,7 +834,14 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [images, seedOnClick, addImageClick, removeImageClick, preloadVideos];
+    	return [
+    		images,
+    		current_image,
+    		seedOnClick,
+    		addImageClick,
+    		removeImageClick,
+    		preloadVideos
+    	];
     }
 
     class App extends SvelteComponentDev {

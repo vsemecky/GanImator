@@ -58,7 +58,7 @@
 	 */
 	function seedOnClick(image) {
 		// Skip if seed is the same
-		if (image.seed == current_image.seed) {
+		if (image.seed === current_image.seed) {
 			return false;
 		}
 		document.body.style.cursor = "progress";
@@ -115,11 +115,17 @@
 		console.log("preloadSeedVideos(", seed, "): START");
 		let image;
 		for (image of images) {
-			await sleep(500);
 			// Skip interpolation to the same seed
 			if (seed === image.seed) {
 				continue;
 			}
+			// Stop preloading if current_image has been changed
+			if (seed !== current_image.seed) {
+				console.log("preloadSeedVideos(", seed, "): STOPPED");
+				return;
+			}
+			// Wait a while
+			await sleep(100);
 			// Stop preloading if current_image has been changed
 			if (seed !== current_image.seed) {
 				console.log("preloadSeedVideos(", seed, "): STOPPED");
@@ -141,26 +147,58 @@
 		height: 0;
 		padding: 0;
 	}
+
+	/**
+ 	 * Sidebar
+ 	 */
+	aside {
+		padding-top: 1em;
+	}
+	aside div.thumb {
+		display:inline-block;
+		position:relative;
+	}
+	aside div.thumb img {
+		cursor: pointer;
+		min-width: 77px;
+		min-height: 77px;
+		max-width: 128px;
+		max-height: 128px;
+		margin: 0 1em 1em 0;
+	}
+	#sidebar img {
+		border: 3px solid #000;
+		transition: border-color 1.3s linear;
+	}
+	#sidebar img.active {
+		border-color: #fff;
+	}
 </style>
 
 <div class="row">
 	<section class="col-9">
 		<!--		<video id="player" width="288" height="480"></video>-->
 		<video id="player" width="384" height="640"></video>
-		<canvas id="canvas" width="384" height="640"></canvas>
+		<canvas id="canvas" width="384" height="640" title="Canvas"></canvas>
 		<!--		<img id="image" width="384" height="640" src={current_image.url}/>-->
 		<!--		<canvas id="canvas" width="576" height="960"></canvas>-->
-
+		<br>
+		<div class="btn-group">
+			<button type="button" class="btn btn-outline-light" on:click={removeImageClick(current_image.seed)}>Delete image</button>
+			<button type="button" class="btn btn-outline-light">Add tag</button>
+		</div>
 	</section>
 	<aside id="sidebar" class="col-3">
+		<div class="btn-group">
+			<button type="button" class="btn btn-outline-light" on:click={addImageClick}>+ Add random seed</button>
+			<button type="button" class="btn btn-outline-light" on:click={preloadVideos}>Preload</button>
+		</div>
+
+		<hr>
 		{#each images as image}
-			<div  class="thumb">
-				<img class="img-fluid" src={image.url} title={image.seed} on:click={seedOnClick(image)} />
-				<button type="button" class="btn btn-sm btn-outline-light" on:click={removeImageClick(image.seed)}>X</button>
-			</div>
+		<div class="thumb">
+			<img class="img-fluid" class:active="{current_image.seed === image.seed}" src={image.url} title={image.seed} alt={image.seed} on:click={seedOnClick(image)} />
+		</div>
 		{/each}
-		<br />
-		<button type="button" class="btn btn-outline-light" on:click={addImageClick}>+ Add random seed</button>
-		<button type="button" class="btn btn-outline-light" on:click={preloadVideos}>Preload</button>
 	</aside>
 </div>
