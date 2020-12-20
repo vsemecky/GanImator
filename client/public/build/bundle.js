@@ -364,7 +364,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (130:2) {#each images as image}
+    // (135:2) {#each images as image}
     function create_each_block(ctx) {
     	let div;
     	let img;
@@ -385,12 +385,12 @@ var app = (function () {
     			attr_dev(img, "class", "img-fluid");
     			if (img.src !== (img_src_value = /*image*/ ctx[11].url)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "title", img_title_value = /*image*/ ctx[11].seed);
-    			add_location(img, file, 131, 3, 3194);
+    			add_location(img, file, 136, 3, 3357);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-sm btn-outline-light");
-    			add_location(button, file, 132, 3, 3288);
+    			add_location(button, file, 137, 3, 3451);
     			attr_dev(div, "class", "thumb");
-    			add_location(div, file, 130, 2, 3170);
+    			add_location(div, file, 135, 2, 3333);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -447,7 +447,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(130:2) {#each images as image}",
+    		source: "(135:2) {#each images as image}",
     		ctx
     	});
 
@@ -504,25 +504,25 @@ var app = (function () {
     			attr_dev(video, "width", "3");
     			attr_dev(video, "height", "5");
     			attr_dev(video, "class", "svelte-dpwlo2");
-    			add_location(video, file, 125, 2, 2988);
+    			add_location(video, file, 130, 2, 3151);
     			attr_dev(canvas_1, "id", "canvas");
     			attr_dev(canvas_1, "width", "576");
     			attr_dev(canvas_1, "height", "960");
-    			add_location(canvas_1, file, 126, 2, 3039);
+    			add_location(canvas_1, file, 131, 2, 3202);
     			attr_dev(section, "class", "col-9");
-    			add_location(section, file, 124, 1, 2962);
-    			add_location(br, file, 135, 2, 3419);
+    			add_location(section, file, 129, 1, 3125);
+    			add_location(br, file, 140, 2, 3582);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "btn btn-outline-light");
-    			add_location(button0, file, 136, 2, 3428);
+    			add_location(button0, file, 141, 2, 3591);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "btn btn-outline-light");
-    			add_location(button1, file, 137, 2, 3534);
+    			add_location(button1, file, 142, 2, 3697);
     			attr_dev(aside, "id", "sidebar");
     			attr_dev(aside, "class", "col-3");
-    			add_location(aside, file, 128, 1, 3107);
+    			add_location(aside, file, 133, 1, 3270);
     			attr_dev(div, "class", "row");
-    			add_location(div, file, 123, 0, 2943);
+    			add_location(div, file, 128, 0, 3106);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -716,7 +716,7 @@ var app = (function () {
     	}
 
     	async function preloadSeedVideos(seed) {
-    		console.log("preloadSeedVideos()", seed);
+    		console.log("preloadSeedVideos(", seed, ")");
     		await sleep(1500);
     		var image;
 
@@ -724,6 +724,11 @@ var app = (function () {
     			if (seed != image.seed) {
     				const res = await fetch(getVideoUrl(seed, image.seed));
     			}
+
+    			if (seed != current_image.seed) {
+    				console.log("preloadSeedVideos(): STOP PRELOADING");
+    				return 0;
+    			} // current image changed, stop preloading
     		}
     	}
 

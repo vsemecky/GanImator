@@ -102,12 +102,17 @@
 	}
 
 	async function preloadSeedVideos(seed) {
-		console.log("preloadSeedVideos()", seed);
+		console.log("preloadSeedVideos(", seed, ")");
 		await sleep(1500);
 		var image;
 		for (image of images) {
 			if (seed != image.seed) {
 				const res = await fetch(getVideoUrl(seed, image.seed));
+			}
+			if (seed != current_image.seed) {
+				console.log("preloadSeedVideos(): STOP PRELOADING");
+				return 0;
+				// current image changed, stop preloading
 			}
 		}
 	}
