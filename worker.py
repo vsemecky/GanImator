@@ -24,7 +24,7 @@ class BackgroundWorker(object):
 
     # Video render options
     video_options = {
-        'preset':  "ultrafast",  # veryslow / ultrafast
+        'preset':  "veryslow",  # veryslow / ultrafast
         'codec':   "libx264",
         'bitrate': '24M',
         'fps':     30,

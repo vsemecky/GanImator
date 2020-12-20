@@ -1,13 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
-	export let name;
 
 	let images = [];
 	let current_image = {
 		seed: 0,
 		url: "",
 	};
-	// let current_video = "";
 
 	// Elements
 	let player;
@@ -22,22 +20,21 @@
 		let project = await res.json();
 		console.log("Project", project);
 		images = project.images;
-		console.log("Images", project.images);
+		console.log("Images", images);
 		current_image = images[0];
-		// current_video = '/project/video/' + images[0].seed + "-" + images[1].seed + ".mp4";
-		player = document.getElementById("player");
+		player = document.getElementById('player');
 		canvas = document.getElementById('canvas');
 		context = canvas.getContext('2d');
 		context.scale(0.5, 0.5);
 
 		player.addEventListener('play', function() {
 			(function loop() {
-				context.drawImage(player, 0, 0);
-				if (!player.ended && !player.paused) {
+				if (!player.paused && !player.ended) {
+					context.drawImage(player, 0, 0);
 					setTimeout(loop, 1000 / 30); // drawing at 30fps
 				}
 			})();
-		}, 0);
+		}, false);
 
 		// Show first video
 		player.src = getVideoUrl(images[1].seed, current_image.seed);
@@ -98,16 +95,16 @@
 
 	async function preloadVideos() {
 		console.log("preloadVideos()", images);
-		var image1;
-		var image2;
+		let image1;
+		let image2;
 		for (image1 of images) {
 			for (image2 of images) {
-				await sleep(1000);
 				// Skip interpolation to the same seed
-				if (image1.seed == image2.seed) {
+				if (image1.seed === image2.seed) {
 					continue;
 				}
 				console.log("preloadVideos():", image1.seed, image2.seed);
+				await sleep(100);
 				await fetch(getVideoUrl(image1.seed, image2.seed));
 			}
 		}
@@ -120,11 +117,11 @@
 		for (image of images) {
 			await sleep(500);
 			// Skip interpolation to the same seed
-			if (seed == image.seed) {
+			if (seed === image.seed) {
 				continue;
 			}
 			// Stop preloading if current_image has been changed
-			if (seed != current_image.seed) {
+			if (seed !== current_image.seed) {
 				console.log("preloadSeedVideos(", seed, "): STOPPED");
 				return;
 			}
@@ -138,27 +135,29 @@
 <style>
 	/* Hide video element*/
 	video#player {
-		/*visibility: hidden;*/
-		/*display: none;*/
+		/* display: none; */
+		visibility: hidden;
+		width: 0;
+		height: 0;
 		padding: 0;
 	}
 </style>
 
 <div class="row">
 	<section class="col-9">
-<!--		<video id="player" width="288" height="480"></video>-->
+		<!--		<video id="player" width="288" height="480"></video>-->
 		<video id="player" width="384" height="640"></video>
 		<canvas id="canvas" width="384" height="640"></canvas>
-<!--		<img id="image" width="384" height="640" src={current_image.url}/>-->
-<!--		<canvas id="canvas" width="576" height="960"></canvas>-->
+		<!--		<img id="image" width="384" height="640" src={current_image.url}/>-->
+		<!--		<canvas id="canvas" width="576" height="960"></canvas>-->
 
 	</section>
 	<aside id="sidebar" class="col-3">
 		{#each images as image}
-		<div  class="thumb">
-			<img class="img-fluid" src={image.url} title={image.seed} on:click={seedOnClick(image)} />
-			<button type="button" class="btn btn-sm btn-outline-light" on:click={removeImageClick(image.seed)}>X</button>
-		</div>
+			<div  class="thumb">
+				<img class="img-fluid" src={image.url} title={image.seed} on:click={seedOnClick(image)} />
+				<button type="button" class="btn btn-sm btn-outline-light" on:click={removeImageClick(image.seed)}>X</button>
+			</div>
 		{/each}
 		<br />
 		<button type="button" class="btn btn-outline-light" on:click={addImageClick}>+ Add random seed</button>
