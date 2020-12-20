@@ -105,7 +105,8 @@
 				}
 				console.log("preloadVideos():", image1.seed, image2.seed);
 				await sleep(100);
-				await fetch(getVideoUrl(image1.seed, image2.seed));
+				const response = await fetch(getVideoUrl(image1.seed, image2.seed));
+				console.log("preloadVideos():", response);
 			}
 		}
 	}
