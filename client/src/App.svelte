@@ -134,7 +134,7 @@
 			}
 			// Preload video to the browser cache
 			const response = await fetch(getVideoUrl(seed, image.seed));
-			const blob = await response.blob();
+			await response.blob();
 		}
 		console.log("preloadSeedVideos(", seed, "): FINISHED");
 	}

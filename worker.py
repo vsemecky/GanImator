@@ -63,7 +63,6 @@ class BackgroundWorker(object):
             image_pil = generate_image(pkl=self.project.pkl, seed=int(seed), psi=self.project.psi)
             image_pil.save(filename)
             print("generate_image", seed, colored("OK", 'green'), filename)
-            self.images.update({'ready': True}, Query().seed == seed)
         except Exception as e:
             print("generate_image", seed, colored("ERROR", 'red'), e)
 
@@ -79,7 +78,6 @@ class BackgroundWorker(object):
                     image_pil = generate_image(pkl=self.project.pkl, seed=int(image['seed']), psi=self.project.psi)
                     image_pil.save(filename)
                     print("Generating image", image['seed'], colored("OK", 'green'), filename)
-                self.images.update({'ready': True}, Query().seed == image['seed'])
             except Exception as e:
                 print("Generating image", image['seed'], colored("ERROR", 'red'), e)
 
