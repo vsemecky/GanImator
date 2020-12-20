@@ -95,26 +95,36 @@
 		var image2;
 		for (image1 of images) {
 			for (image2 of images) {
-				console.log(image1.seed, image2.seed);
-				const res = await fetch(getVideoUrl(image1.seed, image2.seed));
+				await sleep(1000);
+				// Skip interpolation to the same seed
+				if (image1.seed == image2.seed) {
+					continue;
+				}
+				console.log("preloadVideos():", image1.seed, image2.seed);
+				await fetch(getVideoUrl(image1.seed, image2.seed));
 			}
 		}
 	}
 
 	async function preloadSeedVideos(seed) {
-		console.log("preloadSeedVideos(", seed, ")");
-		await sleep(1500);
-		var image;
+		await sleep(1000);
+		console.log("preloadSeedVideos(", seed, "): START");
+		let image;
 		for (image of images) {
-			if (seed != image.seed) {
-				const res = await fetch(getVideoUrl(seed, image.seed));
+			await sleep(500);
+			// Skip interpolation to the same seed
+			if (seed == image.seed) {
+				continue;
 			}
+			// Stop preloading if current_image has been changed
 			if (seed != current_image.seed) {
-				console.log("preloadSeedVideos(): STOP PRELOADING");
-				return 0;
-				// current image changed, stop preloading
+				console.log("preloadSeedVideos(", seed, "): STOPPED");
+				return;
 			}
+			// Preload video to the browser cache
+			await fetch(getVideoUrl(seed, image.seed));
 		}
+		console.log("preloadSeedVideos(", seed, "): FINISHED");
 	}
 </script>
 
