@@ -86,9 +86,15 @@ class BackgroundWorker(object):
     def generate_missing_videos(self):
         """ Generate all missing interpolation videos """
         print(colored("Worker:", "green"), "Generate all missing interpolation videos")
+        images_count = len(self.images.all())
         for image1 in self.images.all():
             for image2 in self.images.all():
                 try:
+                    # Stop video generating on images count change
+                    if images_count != len(self.images.all()):
+                        print(colored("Worker:", "green"), "Images count change: Generating videos STOPPED ")
+                        return
+
                     # Skip interpolation between identical seeds
                     if image1['seed'] == image2['seed']:
                         continue
@@ -125,7 +131,7 @@ class BackgroundWorker(object):
         #     self.que.append({'action': 'generate_image', 'seed': seed})
 
         # Preload neurals (force ganimator to load pkl and store in memory cache)
-        generate_image(pkl=self.project.pkl)
+        preload_pkl(pkl=self.project.pkl)
         self.generate_missing_images()
         self.generate_missing_videos()
 

@@ -375,3 +375,8 @@ def generate_image(pkl: str, seed: int = 42, psi: float = 0.5):
     images = Gs.run(z, None, **Gs_kwargs)  # [minibatch, height, width, channel]
     image_pil = PIL.Image.fromarray(images[0], 'RGB')
     return image_pil
+
+
+def preload_pkl(pkl: str):
+    tflib.init_tf()
+    load_network(pkl)
