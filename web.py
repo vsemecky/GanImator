@@ -65,42 +65,24 @@ def get_project():
 
     return jsonify({
         'images': images,
-        'styles': project.styles.all(),
+        'pkl': project.pkl,
+        'data_dir': project.data_dir,
     })
 
 
 @app.route("/api/add-image/<int:seed>")
 def add_image(seed):
-    is_ready = os.path.isfile(worker.get_seed_filename(seed))
     project.images.insert({
-        'seed': int(seed),
-        'style': False,
-        'ready': is_ready
+        'seed': int(seed)
     })
-    if not is_ready:
-        worker.que.append({'action': 'generate_image', 'seed': seed})
-    worker.que.append({'action': 'generate_videos', 'seed': seed})
-    time.sleep(0)  # Wait 3 seconds if image is already made.
-    return get_project()
-
-
-@app.route("/api/add-style/<seed>")
-def add_style(seed):
-    project.styles.insert({'seed': int(seed), 'ready': False})
-    worker.que.append({'action': 'generate_image', 'seed': seed})
+    worker.que.append({'action': 'generate_all', 'seed': seed})
+    time.sleep(2)  # Wait 3 seconds if image is already made.
     return get_project()
 
 
 @app.route("/api/remove-image/<int:seed>")
 def remove_image(seed: int):
     project.images.remove(Query().seed == seed)
-    project.images.remove(Query().seed == str(seed))  # @todo tohle casem odstranit. Budem pouzivat jen int.
-    return get_project()
-
-
-@app.route("/api/remove-style/<seed>")
-def remove_style(seed):
-    project.styles.remove(Query().seed == seed)
     return get_project()
 
 

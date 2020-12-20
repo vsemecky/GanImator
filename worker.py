@@ -124,14 +124,10 @@ class BackgroundWorker(object):
         def log(message): print(colored("Worker:", "green"), colored(message, "yellow"), " ")
         log("start")
 
-        # Feed que with missing media
-        # missing_seeds = self.get_missing_seeds()
-        # print("Missing seeds:", missing_seeds)
-        # for seed in missing_seeds:
-        #     self.que.append({'action': 'generate_image', 'seed': seed})
-
         # Preload neurals (force ganimator to load pkl and store in memory cache)
         preload_pkl(pkl=self.project.pkl)
+
+        # Generate missing images and videos
         self.generate_missing_images()
         self.generate_missing_videos()
 
@@ -140,10 +136,12 @@ class BackgroundWorker(object):
             try:
                 task = self.que.pop(0)
                 log(task)
-                if task['action'] == 'generate_image':
+                if task['action'] == 'generate_images':
                     self.generate_missing_images()
-                #     Nastavit 'ready'
                 elif task['action'] == 'generate_videos':
+                    self.generate_missing_videos()
+                elif task['action'] == 'generate_all':
+                    self.generate_missing_images()
                     self.generate_missing_videos()
                 else:
                     log("Uknown task")
