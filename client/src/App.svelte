@@ -52,6 +52,18 @@
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
+	async function zoomIn() {
+		console.log("zoomIn()");
+		context.scale(1.2, 1.2);
+		player.play();
+	}
+
+	async function zoomOut() {
+		console.log("zoomOut()");
+		context.scale(1/1.2, 1/1.2);
+		player.play();
+	}
+
 	/**
 	 * User clicked on the image => Set the new current image.
 	 * @param image
@@ -170,7 +182,6 @@
 	}
 	#sidebar img {
 		border: 3px solid #000;
-		transition: border-color 1.3s linear;
 	}
 	#sidebar img.active {
 		border-color: #fff;
@@ -194,6 +205,8 @@
 		<div class="btn-group">
 			<button type="button" class="btn btn-outline-light" on:click={addImageClick}>+ Add random seed</button>
 			<button type="button" class="btn btn-outline-light" on:click={preloadVideos}>Preload</button>
+			<button type="button" class="btn btn-outline-light" on:click={zoomIn}>Zoom +</button>
+			<button type="button" class="btn btn-outline-light" on:click={zoomOut}>Zoom -</button>
 		</div>
 
 		<hr>
