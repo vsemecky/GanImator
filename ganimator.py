@@ -100,6 +100,7 @@ def line_interpolate(zs, steps):
 # @see sasdfrom https://github.com/dvschultz/stylegan2
 #
 def latent_interpolation_clip(pkl, psi=0.5, mp4_fps=30, duration=60, seeds=[]):
+    print('Interpolation clip (psi=%f)' % psi)
     # Loading neurals
     _G, _D, Gs = load_network(pkl)
 
@@ -368,7 +369,7 @@ def generate_image(pkl: str, seed: int = 42, psi: float = 0.5):
     if psi:
         Gs_kwargs.truncation_psi = psi
 
-    print('Generating image for seed %d...' % seed)
+    print('Generating image (seed=%d, psi=%f)' % (seed, psi))
     rnd = np.random.RandomState(seed)
     z = rnd.randn(1, *Gs.input_shape[1:])  # [minibatch, component]
     tflib.set_vars({var: rnd.randn(*var.shape.as_list()) for var in noise_vars})  # [height, width]
