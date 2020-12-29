@@ -7,7 +7,7 @@ from flask_ngrok import run_with_ngrok
 from termcolor import colored
 from tinydb import Query
 
-import project
+from project import Project
 
 
 # Load ganimator lib only in Colab
@@ -31,11 +31,10 @@ class BackgroundWorker(object):
         'threads': 8,
     }
 
-    def __init__(self, project):
+    def __init__(self, project: Project):
         self.que = []  # array of {'action': string, 'seed': int}  """ Que of jobs should be done by worker """
         self.project = project
         self.images = project.images
-        self.psi = 0.7
         self.duration = 1  # Duration of interpolation videos [seconds]
         thread = Thread(target=self.run, args=())
         thread.daemon = True
@@ -104,7 +103,7 @@ class BackgroundWorker(object):
                     print("Generating video", image1['seed'], "=>", image2['seed'])
                     clip = latent_interpolation_clip(
                         pkl=self.project.pkl,
-                        psi=self.psi,
+                        psi=self.project.psi,
                         mp4_fps=30,
                         duration=self.duration,
                         seeds=[image1['seed'], image2['seed']]

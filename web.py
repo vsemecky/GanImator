@@ -4,7 +4,7 @@ import time
 from flask import Blueprint, Flask, render_template, redirect, url_for, abort, send_from_directory, jsonify
 from flask_ngrok import run_with_ngrok
 from tinydb import Query
-import project
+from project import Project
 from worker import BackgroundWorker
 
 
@@ -23,7 +23,7 @@ parser.add_argument('--debug', nargs='?', const=True, default=False, help='Run F
 parser.add_argument('--project-dir', help='Path to project folder', required=True)
 config = parser.parse_args()
 
-project = project.Project(config.project_dir)
+project = Project(config.project_dir)
 
 # Start background worker
 worker = BackgroundWorker(project)
@@ -34,7 +34,7 @@ project_blueprint = Blueprint(
     'project_blueprint',
     __name__,
     static_url_path='/project',
-    static_folder=project.data_dir
+    static_folder=project.project_dir
 )
 
 app = Flask(
@@ -66,7 +66,7 @@ def get_project():
     return jsonify({
         'images': images,
         'pkl': project.pkl,
-        'data_dir': project.data_dir,
+        'project_dir': project.project_dir,
     })
 
 

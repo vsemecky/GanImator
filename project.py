@@ -14,16 +14,17 @@ class Project:
     """ Default Psi Truncation """
     psi = 0.75
 
-    def __init__(self, data_dir):
+    def __init__(self, project_dir):
         # Folders
-        self.data_dir = data_dir
-        self.image_dir = data_dir + "/image"
-        self.video_dir = data_dir + "/video"
+        self.project_dir = project_dir
+        self.image_dir = project_dir + "/image"
+        self.video_dir = project_dir + "/video"
         os.makedirs(self.image_dir, exist_ok=True)
         os.makedirs(self.video_dir, exist_ok=True)
 
         # JSON database
-        self.db = TinyDB(data_dir + '/project.json', sort_keys=False, indent=4, separators=(',', ': '))
+        self.db = TinyDB(project_dir + '/project.json', sort_keys=False, indent=4, separators=(',', ': '))
+        # tables
         self.images = self.db.table('images')
         self.styles = self.db.table('styles')
 
@@ -31,7 +32,7 @@ class Project:
         self.pkl = self.get_pkl_filename()
 
     def get_pkl_filename(self):
-        pkls = glob.glob(self.data_dir + '/*.pkl')
+        pkls = glob.glob(self.project_dir + '/*.pkl')
         if len(pkls) != 1:
             print("There should be exactly one *.pkl file in project directory. Found ", len(pkls))
             exit()
