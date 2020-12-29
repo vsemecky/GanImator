@@ -42,6 +42,8 @@
 		player.muted = true;
 		player.load();
 
+		await preloadSeedVideos(current_image.seed);
+
 	});
 
 	function getVideoUrl(seed1, seed2) {
